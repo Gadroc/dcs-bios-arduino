@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,11 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#include "BufferListener.h"
 
-#include "FastPin.h"
-#include "Bus.h"
-#include "Led.h"
+namespace DcsBios {
 
-#endif
+
+	BufferListener* BufferListener::firstBufferStreamListener;
+
+	void BufferListener::handleBufferReady(uint8_t *buffer) {
+    BufferListener* bl = firstBufferStreamListener;
+    while (bl) {
+        bl->onBufferReady(buffer);
+        bl = bl->_nextListener;
+    }
+	}
+
+}

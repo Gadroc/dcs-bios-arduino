@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,11 +16,25 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_LEDS_H_
+#define _DCSBIOS_LEDS_H_
 
+#include <Arduino.h>
 #include "FastPin.h"
-#include "Bus.h"
-#include "Led.h"
+#include "BufferListener.h"
+
+namespace DcsBios {
+	class Led : BufferListener {
+		private:
+			FastPin _pin;
+			uint8_t _address;
+			uint8_t _mask;
+
+			void onBufferReady(uint8_t *buffer);
+
+		public:
+			Led(uint8_t address, uint8_t mask, int pin);
+	};
+}
 
 #endif

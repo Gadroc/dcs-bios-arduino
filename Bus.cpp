@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,11 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
 
-#include "FastPin.h"
 #include "Bus.h"
-#include "Led.h"
 
-#endif
+namespace DcsBios {	
+	Bus::Bus(uint8_t address, uint8_t bank) {
+		_address = address;
+		_bank = bank;
+	}
+
+    void Bus::begin(HardwareSerial *serialPort, int txPin) {
+        _txPin.setPin(txPin);
+        _txPin.setMode(OUTPUT);
+        _txPin.clear();
+
+        _serial = serialPort;
+    }
+
+    void Bus::process() {
+        
+    }
+}

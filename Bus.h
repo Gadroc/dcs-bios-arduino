@@ -1,20 +1,20 @@
 /*
-	Copyright 2013 Craig Courtney
+    Copyright 2015 Craig Courtney
 
-    This file is part of EOS-Firmware.
+    This file is part of DcsBios-Firmware.
 
-    EOS-Firmware is free software: you can redistribute it and/or modify
+    DcsBios-Firmware is free software: you can redistribute it and/or modify
     it under the terms of the GNU General Public License as published by
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    EOS-Firmware is distributed in the hope that it will be useful,
+    DcsBios-Firmware is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
 
     You should have received a copy of the GNU General Public License
-    along with EOS-Firmware.  If not, see <http://www.gnu.org/licenses/>.
+    along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #ifndef _DCSBIOS_BUS_H_
 #define _DCSBIOS_BUS_H_
@@ -22,7 +22,7 @@
 #include <Arduino.h>
 #include "FastPin.h"
 
-#define BUFFER_SIZE 31
+#define DCSBIOS_BUFFER_SIZE 31
 
 namespace DcsBios {
     class Bus 
@@ -32,17 +32,27 @@ namespace DcsBios {
         FastPin _txPin;
         uint8_t _address;
         uint8_t _bank;
-        uint8_t _rxBuffer[BUFFER_SIZE];
-        uint8_t _txBuffer[BUFFER_SIZE];
+        uint8_t _rxBuffer[DCSBIOS_BUFFER_SIZE];
+
+        uint8_t _txPointer;
+        uint8_t _txBuffer[DCSBIOS_BUFFER_SIZE];
+
+        uint16_t _bufferOverruns;
+        uint16_t _rxErrors;
 
     public:
-        EosBusSerial(uint8_t address, uint8_t bank);
-        void begin(HardwareSerial *serialPort, uint8_t txPin);
+        Bus(uint8_t address, uint8_t bank);
 
-        // Reads data from the bus and returns true if the buffer data
-        // is in a state which updates to outputs should occur.  Buffer will only be
-        // in a consistent state until the next isDataReay call.
-        bool isDataReady();
+        void begin(HardwareSerial *serialPort, int txPin);
+
+        // Must be called oftern in main processing loop.  This routine
+        // will process incoming data, notify outputs and send inputs
+        // back when necessary.
+        void process();
+
+        // Queues command data to send back to the simulation when we are
+        // polled.
+        void queueCommand(uint8_t buffer, uint8_t size);
     };
 };
 
