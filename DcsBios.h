@@ -20,7 +20,8 @@
 #define _DCSBIOS_H_
 
 #include "FastPin.h"
-#include "Bus.h"
+#include "BusDevice.h"
+#include "BusController.h"
 #include "Led.h"
 
 #endif

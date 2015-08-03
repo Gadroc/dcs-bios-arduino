@@ -18,17 +18,12 @@
 */
 #include "BufferListener.h"
 
-namespace DcsBios {
+BufferListener* BufferListener::firstBufferStreamListener;
 
-
-	BufferListener* BufferListener::firstBufferStreamListener;
-
-	void BufferListener::handleBufferReady(uint8_t *buffer) {
+void BufferListener::handleBufferReady(uint8_t *buffer) {
     BufferListener* bl = firstBufferStreamListener;
     while (bl) {
         bl->onBufferReady(buffer);
         bl = bl->_nextListener;
     }
-	}
-
 }

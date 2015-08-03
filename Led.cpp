@@ -18,17 +18,15 @@
 */
 #include "Led.h"
 
-namespace DcsBios {
-    Led::Led(uint8_t address, uint8_t mask, int pin) {
-        _pin.setPin(pin);
-        _pin.setMode(OUTPUT);
-    }
 
-    void Led::onBufferReady(uint8_t *buffer) {
-        if ((buffer[_address] & _mask)) {
-            _pin.set();
-        } else {
-            _pin.clear();
-        }
+Led::Led(uint8_t address, uint8_t mask, int pin) {
+    _pin.setPin(pin, OUTPUT);
+}
+
+void Led::onBufferReady(uint8_t *buffer) {
+    if ((buffer[_address] & _mask)) {
+        _pin.set();
+    } else {
+        _pin.clear();
     }
 }

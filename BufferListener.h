@@ -21,23 +21,21 @@
 
 #include <Arduino.h>
 
-namespace DcsBios {
-    class BufferListener {
-        private:
-            virtual void onBufferReady(uint8_t *buffer) {}
-            BufferListener* _nextListener;
+class BufferListener {
+    private:
+        virtual void onBufferReady(uint8_t *buffer) {}
+        BufferListener* _nextListener;
 
-        public:
-            static BufferListener* firstBufferStreamListener;
-            static void handleBufferReady(uint8_t *buffer);
+    public:
+        static BufferListener* firstBufferStreamListener;
+        static void handleBufferReady(uint8_t *buffer);
 
-            BufferListener();
-    };
+        BufferListener();
+};
 
-    inline BufferListener::BufferListener() {
-        this->_nextListener = firstBufferStreamListener;
-        firstBufferStreamListener = this;
-    }
+inline BufferListener::BufferListener() {
+    this->_nextListener = firstBufferStreamListener;
+    firstBufferStreamListener = this;
 }
 
 #endif

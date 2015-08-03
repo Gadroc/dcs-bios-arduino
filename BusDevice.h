@@ -16,44 +16,36 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_BUS_H_
-#define _DCSBIOS_BUS_H_
+#ifndef _DCSBIOS_BUSDEVICE_H_
+#define _DCSBIOS_BUSDEVICE_H_
 
 #include <Arduino.h>
 #include "FastPin.h"
+#include "BusParser.h"
 
-#define DCSBIOS_BUFFER_SIZE 31
-
-namespace DcsBios {
-    class Bus 
-    {
+class BusDevice 
+{
     private:
-        HardwareSerial* _serial;
+        Stream* _bus;
         FastPin _txPin;
+
         uint8_t _address;
         uint8_t _bank;
-        uint8_t _rxBuffer[DCSBIOS_BUFFER_SIZE];
 
-        uint8_t _txPointer;
-        uint8_t _txBuffer[DCSBIOS_BUFFER_SIZE];
+        BusParser _parser;
 
-        uint16_t _bufferOverruns;
-        uint16_t _rxErrors;
+
+        void processPacket();
 
     public:
-        Bus(uint8_t address, uint8_t bank);
-
-        void begin(HardwareSerial *serialPort, int txPin);
+        void begin(Stream *busStream, int txPin, uint8_t address, uint8_t bank);
 
         // Must be called oftern in main processing loop.  This routine
         // will process incoming data, notify outputs and send inputs
         // back when necessary.
         void process();
-
-        // Queues command data to send back to the simulation when we are
-        // polled.
-        void queueCommand(uint8_t buffer, uint8_t size);
-    };
 };
+
+extern BusDevice DcsBiosDevice;
 
 #endif

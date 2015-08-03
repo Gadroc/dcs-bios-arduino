@@ -23,18 +23,17 @@
 #include "FastPin.h"
 #include "BufferListener.h"
 
-namespace DcsBios {
-	class Led : BufferListener {
-		private:
-			FastPin _pin;
-			uint8_t _address;
-			uint8_t _mask;
 
-			void onBufferReady(uint8_t *buffer);
+class Led : BufferListener {
+	private:
+		FastPin _pin;
+		uint8_t _address;
+		uint8_t _mask;
 
-		public:
-			Led(uint8_t address, uint8_t mask, int pin);
-	};
-}
+		void onBufferReady(uint8_t *buffer);
+
+	public:
+		Led(uint8_t address, uint8_t mask, int pin);
+};
 
 #endif

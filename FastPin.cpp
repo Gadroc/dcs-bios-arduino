@@ -82,9 +82,10 @@ static void turnOffPWM(uint8_t timer)
 	}
 }
 
-namespace DcsBios {
-	void FastPin::setMode(uint8_t mode) 
-	{
+void FastPin::setPin(uint8_t pin, uint8_t mode) 
+{
+	if (_pinNumber = 0xff) {
+		_pinNumber = pin;
 		uint8_t port = digitalPinToPort(_pinNumber);
 
 		if (port == NOT_A_PIN) return;

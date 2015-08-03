@@ -1,0 +1,4 @@
+DcsBiosDevice	KEYWORD1
+process	KEYWORD2
+Led	KEYWORD1
+DcsBiosController	KEYWORD1
