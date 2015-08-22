@@ -16,26 +16,44 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_BUFFERLISTENER_H_
-#define _DCSBIOS_BUFFERLISTENER_H_
+#ifndef _DCSBIOS_FASTPWM_H_
+#define _DCSBIOS_FASTPWM_H_
 
 #include <Arduino.h>
+#include "FastPin.h"
 
-class BufferListener {
-    private:
-        virtual void onBufferReady(uint8_t *buffer) = 0;
-        BufferListener* _nextListener;
+// Helper class to do highspeed analog output on the arduino.
+// Built in routines are incredibly slow due to significant saftey 
+// checks and runtime lookup of port and masks.  This class sacrifices
+// some memory in order to do look ups once on port and mask values, and only
+// does pin setup in begin call.
+class FastPwm : private FastPin
+{
+private:		
+	uint8_t _timer;
 
-    public:
-        static BufferListener* firstBufferStreamListener;
-        static void handleBufferReady(uint8_t *buffer);
+public:
+	FastPwm();
+	FastPwm(uint8_t pin);
 
-        BufferListener();
+	uint8_t getPin();
+	void setPin(uint8_t pin);
+
+	bool isSetup();
+
+	void write(int value);
 };
 
-inline BufferListener::BufferListener() {
-    this->_nextListener = firstBufferStreamListener;
-    firstBufferStreamListener = this;
+inline FastPwm::FastPwm() : FastPin() {
+}
+
+inline uint8_t FastPwm::getPin()
+{
+	return FastPin::getPin();
+}
+
+inline bool FastPwm::isSetup() {
+	return FastPin::isSetup();
 }
 
 #endif

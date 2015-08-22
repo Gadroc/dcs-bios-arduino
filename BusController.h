@@ -22,27 +22,23 @@
 
 #include <Arduino.h>
 #include "FastPin.h"
-#include "BusParser.h"
+#include "DcsBiosBus.h"
 
 #define DCSBIOS_BANK_COUNT 4
 #define DCSBIOS_DEVICE_RESPONSE_TIMEOUT 5
 #define DCSBIOS_MAX_DEVICE_ADDRESS 31
 
-class BusController 
+class BusController : public DcsBiosBus
 {
     private:
-        Stream* _bus;
-        FastPin _txPin;
-        BusParser _parser;
-
+        FastPin _pcReceivePin;
         Stream* _pc;
 
         bool _waitingResponse;
         long _timeout;
 
         bool _bankReady[DCSBIOS_BANK_COUNT];
-        uint8_t _bank[DCSBIOS_BANK_COUNT][DCSBIOS_MAX_DATA_SIZE];
-        uint8_t _bankChecksum[DCSBIOS_BANK_COUNT];
+        uint8_t _bank[DCSBIOS_BANK_COUNT][DCSBIOS_BANK_SIZE];
 
         uint8_t _pollingAddress;
         uint8_t _pollingBank;

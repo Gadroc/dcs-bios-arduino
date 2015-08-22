@@ -20,23 +20,16 @@
 #define _DCSBIOS_BUSDEVICE_H_
 
 #include <Arduino.h>
-#include "FastPin.h"
-#include "BusParser.h"
+#include "DcsBiosBus.h"
 
-class BusDevice 
+class BusDevice : DcsBiosBus
 {
     private:
-        Stream* _bus;
-        FastPin _txPin;
-
         uint8_t _address;
         uint8_t _bank;
 
-        BusParser _parser;
-
-
         void processPacket();
-
+        
     public:
         void begin(Stream *busStream, int txPin, uint8_t address, uint8_t bank);
 

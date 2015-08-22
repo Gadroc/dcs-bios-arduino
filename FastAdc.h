@@ -16,59 +16,46 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_FASTPIN_H_
-#define _DCSBIOS_FASTPIN_H_
+#ifndef _DCSBIOS_FASTADC_H_
+#define _DCSBIOS_FASTADC_H_
 
 #include <Arduino.h>
 
-// Helper class to do highspeed digital input/output on the arduino.
-// Built in routines are incredibly slow due to significant saftey 
+// Helper class to do highspeed analog input on the arduino.
+// Built in routines are slow due to significant saftey 
 // checks and runtime lookup of port and masks.  This class sacrifices
 // some memory in order to do look ups once on port and mask values, and only
 // does pin setup in begin call.
-class FastPin 
+class FastAdc 
 {
-private:		
-	uint8_t _bitMask;					// Bit mask of pin in register
-	volatile uint8_t *_inputRegister;   // Read register for pin
-	volatile uint8_t *_outputRegister;	// Write register for pin
+private:
+    uint8_t _pinNumber;     // Pin number to analog read / write to
+    uint8_t _channel;       // Analog channel to read from for pin
+    uint8_t _reference;
 
 public:
-	FastPin();
-	FastPin(uint8_t pin, uint8_t mode);
+    FastAdc();
+    FastAdc(uint8_t pin, uint8_t analog_reference = DEFAULT);
+    
+    void setPin(uint8_t pin, uint8_t analog_reference = DEFAULT);
+    uint8_t getPin();
+    bool isSetup();
 
-	uint8_t getPin();
-	void setPin(uint8_t pin, uint8_t mode);
-	bool isSetup();
-
-	void clear();
-	void set();
-	uint8_t read();
+    int read();
 };
 
-inline FastPin::FastPin() 
+inline FastAdc::FastAdc() 
 {
+    _pinNumber = 0xff;
 }
 
-inline void FastPin::clear()
+inline uint8_t FastAdc::getPin()
 {
-	uint8_t oldSREG = SREG;
-	cli();
-	 *_outputRegister &= ~_bitMask; 
- 	SREG = oldSREG;		
+    return _pinNumber;
 }
 
-inline void FastPin::set()
-{
-	uint8_t oldSREG = SREG;
-	cli();
-	*_outputRegister |= _bitMask;
- 	SREG = oldSREG;		
-}
-
-inline uint8_t FastPin::read()
-{
-	return (*_inputRegister & _bitMask) ? HIGH : LOW;
+inline bool FastAdc::isSetup() {
+    return _pinNumber != 0xff;
 }
 
 #endif

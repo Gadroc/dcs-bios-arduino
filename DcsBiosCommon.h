@@ -16,17 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_COMMON_H_
+#define _DCSBIOS_COMMON_H_
 
-#include "FastPin.h"
-#include "FastAdc.h"
-#include "FastPwm.h"
-#include "BusDevice.h"
-#include "BusController.h"
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+#define DCSBIOS_BANK_SIZE 31
+#define DCSBIOS_BUS_BUFFER_SIZE 64
+#define DCSBIOS_MAX_ADDRESS 31
+
+#define DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK0 0
+#define DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK1 1
+#define DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK2 2
+#define DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK3 3
+#define DCSBIOS_PACKETYPE_SIMULATION_DATA 4
+#define DCSBIOS_PACKETYPE_DEVICE_COMMAND 5
+#define DCSBIOS_PACKETYPE_CONFIG_REQUEST 6
+#define DCSBIOS_PACKETYPE_CONFIG_RESPONSE 7
+
+#ifndef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
+#ifndef sbi
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#endif
 
 #endif

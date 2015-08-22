@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,17 +16,28 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_READINPUT_H_
+#define _DCSBIOS_READINPUT_H_
 
-#include "FastPin.h"
-#include "FastAdc.h"
-#include "FastPwm.h"
-#include "BusDevice.h"
-#include "BusController.h"
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+#include <Arduino.h>
+#include "Input.h"
+#include "DcsBiosCommon.h"
+
+class ReadInput : public Input {
+private:
+    ReadInput* _nextReadInput;
+    virtual void readInput() = 0;
+
+public:
+    ReadInput();
+    
+    static ReadInput* firstReadInput;      
+    static void readInputs();
+};
+
+inline ReadInput::ReadInput() {
+    this->_nextReadInput = firstReadInput;
+    firstReadInput = this;
+}
 
 #endif

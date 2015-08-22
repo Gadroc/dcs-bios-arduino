@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,17 +16,26 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
-
-#include "FastPin.h"
-#include "FastAdc.h"
-#include "FastPwm.h"
-#include "BusDevice.h"
-#include "BusController.h"
 #include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+#include "FastInputPin.h"
 
-#endif
+ActionButton::ActionButton(char* message, char* arg, uint8_t pin, int debounceTime) {
+    ActionButton(message, arg, new FastInputPin(pin, debounceTime));
+}
+
+ActionButton::ActionButton(char* message, char* arg, InputPin* pin) {
+    _message = message;
+    _arg = arg;
+    _pin = pin;
+    _lastState = pin->readState();
+}
+
+void ActionButton::pollInput() {
+    uint8_t state = _pin->readState();
+    if (state != _lastState) {
+        if (state == LOW) {
+            sendMessage(_message, _arg);
+        }
+        _lastState = state;
+    }
+}

@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,17 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
 
-#include "FastPin.h"
-#include "FastAdc.h"
-#include "FastPwm.h"
-#include "BusDevice.h"
-#include "BusController.h"
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+#include "FastOutputPin.h"
 
-#endif
+FastOutputPin::FastOutputPin() {}
+
+FastOutputPin::FastOutputPin(uint8_t pin) {
+    setPin(pin);
+}
+
+void FastOutputPin::setPin(uint8_t pin) {
+    _pin.setPin(pin, OUTPUT);
+}
+
+void FastOutputPin::set() {
+    _pin.set();
+}
+
+void FastOutputPin::clear() {
+    _pin.clear();
+}

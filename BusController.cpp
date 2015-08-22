@@ -23,18 +23,17 @@
 #define PC_COMMAND_UPDATEDATA 98
 
 void BusController::begin(Stream* busStream, int txPin, Stream* pcStream) {
-    _txPin.setPin(txPin, OUTPUT);
-    _txPin.clear();
+    initBus(busStream, txPin);
+    _pcReceivePin.setPin(13, OUTPUT);
+    _pcReceivePin.clear();
 
-    _bus = busStream;
     _pc = pcStream;
 
     for (uint8_t i=0; i<DCSBIOS_BANK_COUNT; i++) {
-        for (uint8_t j=0; j<DCSBIOS_MAX_DATA_SIZE; j++) {
+        for (uint8_t j=0; j<DCSBIOS_BANK_SIZE; j++) {
             _bank[i][j] = 0;
         }
         _bankReady[i] = false;
-        _bankChecksum[i] = 0;
     }
 
     _waitingResponse = false;
@@ -53,29 +52,13 @@ void BusController::process() {
 }
 
 void BusController::sendPollingPacket() {
-    uint8_t address = 0x80 | _pollingAddress;
+    uint8_t address = _pollingAddress;
     
-    if (_txPin.isSetup()) {
-        _txPin.set();
-    }
-
-    _bus->write(DCSBIOS_PACKET_START_BYTE);
-    _bus->write(DCSBIOS_PACKET_LEADIN_BYTE);
-    _bus->write(address);
     if (_bankReady[_pollingBank]) {
-        uint8_t size = (_pollingBank << 5) | DCSBIOS_MAX_DATA_SIZE;
-        _bus->write(size);
-        _bus->write(_bank[_pollingBank], DCSBIOS_MAX_DATA_SIZE);
-        _bus->write(address + size + _bankChecksum[_pollingBank]);
+        sendPacket(_pollingBank, _pollingAddress, _bank[_pollingBank], DCSBIOS_BANK_SIZE);
         _bankReady[_pollingBank] = false;
     } else {
-        _bus->write((uint8_t)0x00);
-        _bus->write(address);
-    }
-    _bus->write(DCSBIOS_PACKET_TRAIL_BYTE);
-    _bus->flush();
-    if (_txPin.isSetup()) {
-        _txPin.clear();
+        sendPacket(DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK0, _pollingAddress);
     }
 
     _pollingAddress++;
@@ -84,7 +67,7 @@ void BusController::sendPollingPacket() {
     if (_pollingBank >= DCSBIOS_BANK_COUNT) {
         _pollingBank = 0;
     }
-    if (_pollingAddress > DCSBIOS_MAX_DEVICE_ADDRESS) {
+    if (_pollingAddress > 15) {
         _pollingAddress = 0;
     }
   
@@ -93,7 +76,7 @@ void BusController::sendPollingPacket() {
 }
 
 void BusController::processBusInput() {
-    bool packetReady = _parser.processByte(_bus->read());
+    bool packetReady = processBus();
 
     if (packetReady) {
         processBusPacket();
@@ -105,7 +88,23 @@ void BusController::processBusInput() {
 }
 
 void BusController::processBusPacket() {
-    // TODO Hmm
+    if (getPacketType() == DCSBIOS_PACKETYPE_SIMULATION_DATA) {
+        uint8_t size = getPacketDataSize();
+        if (size > 0) {
+            _pc->write(DCSBIOS_PACKET_START_BYTE);
+            _pc->write(DCSBIOS_PACKET_LEADIN_BYTE);
+            uint8_t checksum = getPacketAddress();
+            _pc->write(checksum);
+            checksum += size;
+            _pc->write(size);
+            uint8_t* data = getPacketDataBuffer();
+            for (int i=0;i<size;i++) {
+                checksum += data[i];
+                _pc->write(data[i]);
+            }
+            _pc->write(checksum);        
+        }
+    }
 }
 
 void BusController::processPcInput(int in) {
@@ -119,19 +118,16 @@ void BusController::processPcInput(int in) {
 }
 
 void BusController::loadPcData() {
+    _pcReceivePin.set();
     for (uint8_t i=0; i<DCSBIOS_BANK_COUNT; i++) {
-        int amountRead = _pc->readBytes(_bank[i], DCSBIOS_MAX_DATA_SIZE);
-        if (amountRead == DCSBIOS_MAX_DATA_SIZE) {
-            uint8_t checksum = 0;
-            for (uint8_t j=0; j<DCSBIOS_MAX_DATA_SIZE; j++) {
-                checksum += _bank[i][j];
-            }
+        int amountRead = _pc->readBytes(_bank[i], DCSBIOS_BANK_SIZE);
+        if (amountRead == DCSBIOS_BANK_SIZE) {
             _bankReady[i] = true;
-            _bankChecksum[i] = checksum;
         } else {
             break;
         }        
     }
+    _pcReceivePin.clear();
 }
 
 BusController DcsBiosController;

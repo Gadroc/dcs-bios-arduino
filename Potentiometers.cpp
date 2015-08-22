@@ -16,24 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_LEDS_H_
-#define _DCSBIOS_LEDS_H_
+#include "Potentiometers.h"
 
-#include <Arduino.h>
-#include "FastPin.h"
-#include "BufferListener.h"
+Potentiometer::Potentiometer(char* message, uint8_t pin, int threshold) {
+    _message = message;
+    _adc.setPin(pin);
+    _threshold = threshold;
+    _lastState = _adc.read();
+}
 
-
-class Led : BufferListener {
-	private:
-		FastPin _pin;
-		uint8_t _address;
-		uint8_t _mask;
-
-		void onBufferReady(uint8_t *buffer);
-
-	public:
-		Led(uint8_t address, uint8_t mask, int pin);
-};
-
-#endif
+void Potentiometer::readInput() {
+    unsigned int reading = _adc.read();
+    if (abs(reading-_lastState) > _threshold) {
+        sendMessage(_message, map(reading, 0, 1023, 0, 65535));
+        _lastState = reading;
+    }
+}

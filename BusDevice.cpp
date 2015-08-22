@@ -19,42 +19,32 @@
 
 #include "BusDevice.h"
 #include "BufferListener.h"
+#include "PollingInput.h"
+#include "ReadInput.h"
 
 void BusDevice::begin(Stream *busStream, int txPin, uint8_t address, uint8_t bank) {
+    initBus(busStream, txPin);
+
     _address = address;
     _bank = bank;
-
-    _txPin.setPin(txPin, OUTPUT);
-    _txPin.clear();
-
-    _bus = busStream;
 }
 
 void BusDevice::process() {
-    int data = _bus->read();
-    if (data > -1 && _parser.processByte(data)) {
+    if (processBus()) {
         processPacket();
     }
+    PollingInput::pollInputs();
 }
 
 void BusDevice::processPacket() {
-    if (_parser.getBank() == _bank && _parser.hasData()) {
-        BufferListener::handleBufferReady(_parser.getBuffer());
-    }
-    if (_parser.getAddress() == _address && _parser.getCommand() == 0x04) {
-        if (_txPin.isSetup()) {
-            _txPin.set();
+    if (getPacketType() <= DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK3) {
+        if (getPacketBank() == _bank && getPacketDataSize() > 0) {
+            BufferListener::handleBufferReady(getPacketDataBuffer());
         }
-        _bus->write(DCSBIOS_PACKET_TRAIL_BYTE);
-        _bus->write(DCSBIOS_PACKET_START_BYTE);
-        _bus->write(DCSBIOS_PACKET_LEADIN_BYTE);
-        _bus->write(_address);
-        _bus->write((uint8_t)0);
-        _bus->write(_address);
-        _bus->write(DCSBIOS_PACKET_TRAIL_BYTE);
-        _bus->flush();
-        if (_txPin.isSetup()) {
-            _txPin.clear();
+        if (getPacketAddress() == _address) {
+            ReadInput::readInputs();
+            sendPacket(DCSBIOS_PACKETYPE_SIMULATION_DATA, _address, Input::CommandBuffer, Input::CommandBufferSize);
+            Input::CommandBufferSize = 0;
         }
     }
 }

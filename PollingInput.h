@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,17 +16,28 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_POLLINGINPUT_H_
+#define _DCSBIOS_POLLINGINPUT_H_
 
-#include "FastPin.h"
-#include "FastAdc.h"
-#include "FastPwm.h"
-#include "BusDevice.h"
-#include "BusController.h"
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+#include <Arduino.h>
+#include "Input.h"
+#include "DcsBiosCommon.h"
+
+class PollingInput : public Input {
+private:
+    PollingInput* _nextPollingInput;
+    virtual void pollInput() = 0;
+
+public:
+    PollingInput();
+    
+    static PollingInput* firstPollingInput;    
+    static void pollInputs();
+};
+
+inline PollingInput::PollingInput() {
+    this->_nextPollingInput = firstPollingInput;
+    firstPollingInput = this;
+}
 
 #endif

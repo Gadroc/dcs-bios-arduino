@@ -1,4 +1,12 @@
 DcsBiosDevice	KEYWORD1
-process	KEYWORD2
-Led	KEYWORD1
 DcsBiosController	KEYWORD1
+Led	KEYWORD1
+PwmLed	KEYWORD1
+Switch2Pos	KEYWORD1
+Switch3Pos	KEYWORD1
+SwitchMultiPos KEYWORD1
+Potentiometer	KEYWORD1
+FastPin	KEYWORD1
+FastAdc	KEYWORD1
+FastInputPin KEYWORD1
+FastOutputPin	KEYWORD1

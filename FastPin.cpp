@@ -17,10 +17,7 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "FastPin.h"
-
-#ifndef cbi
-#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
-#endif
+#include "DcsBiosCommon.h"
 
 static void turnOffPWM(uint8_t timer)
 {
@@ -82,11 +79,16 @@ static void turnOffPWM(uint8_t timer)
 	}
 }
 
+
+FastPin::FastPin(uint8_t pin, uint8_t mode) {
+	setPin(pin, mode);
+}
+
 void FastPin::setPin(uint8_t pin, uint8_t mode) 
 {
-	if (_pinNumber = 0xff) {
-		_pinNumber = pin;
-		uint8_t port = digitalPinToPort(_pinNumber);
+//	if (_pinNumber = 0xff) {
+//		_pinNumber = pin;
+		uint8_t port = digitalPinToPort(pin);
 
 		if (port == NOT_A_PIN) return;
 
@@ -94,7 +96,7 @@ void FastPin::setPin(uint8_t pin, uint8_t mode)
 
 		_outputRegister = portOutputRegister(port);
 		_inputRegister = portInputRegister(port);
-		_bitMask = digitalPinToBitMask(_pinNumber);
+		_bitMask = digitalPinToBitMask(pin);
 
 		uint8_t oldSREG = SREG;
 	    cli();
@@ -109,7 +111,7 @@ void FastPin::setPin(uint8_t pin, uint8_t mode)
 		}
 		SREG = oldSREG;
 
-		uint8_t timer = digitalPinToTimer(_pinNumber);
+		uint8_t timer = digitalPinToTimer(pin);
 		if (timer != NOT_ON_TIMER) turnOffPWM(timer);
-	}
+//	}
 }

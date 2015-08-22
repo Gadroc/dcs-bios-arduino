@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,17 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_INPUT_H_
+#define _DCSBIOS_INPUT_H_
 
-#include "FastPin.h"
-#include "FastAdc.h"
-#include "FastPwm.h"
-#include "BusDevice.h"
-#include "BusController.h"
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+#include <Arduino.h>
+#include "DcsBiosCommon.h"
+
+class Input {
+private:
+    static uint8_t getStringLength(char* message);
+    static void addString(char* message);    
+
+public:
+    static uint8_t CommandBuffer[DCSBIOS_BUS_BUFFER_SIZE];
+    static uint8_t CommandBufferSize;
+
+    static void sendMessage(char* message, int attribute);
+    static void sendMessage(char* message, char* arg);
+};
 
 #endif

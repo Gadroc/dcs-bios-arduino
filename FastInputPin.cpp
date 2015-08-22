@@ -16,26 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_BUFFERLISTENER_H_
-#define _DCSBIOS_BUFFERLISTENER_H_
 
-#include <Arduino.h>
+#include "FastInputPin.h"
 
-class BufferListener {
-    private:
-        virtual void onBufferReady(uint8_t *buffer) = 0;
-        BufferListener* _nextListener;
+FastInputPin::FastInputPin() {}
 
-    public:
-        static BufferListener* firstBufferStreamListener;
-        static void handleBufferReady(uint8_t *buffer);
-
-        BufferListener();
-};
-
-inline BufferListener::BufferListener() {
-    this->_nextListener = firstBufferStreamListener;
-    firstBufferStreamListener = this;
+FastInputPin::FastInputPin(uint8_t pin, uint8_t debounceTime) {
+    setPin(pin, debounceTime);
 }
 
-#endif
+void FastInputPin::setPin(uint8_t pin, uint8_t debounceTime) {
+    _pin.setPin(pin, INPUT_PULLUP);
+    _debounceTime = debounceTime;
+    _currentState = _pin.read();
+    _lastRead = _pin.read();
+}
+
+uint8_t FastInputPin::readState() {
+    uint8_t reading = _pin.read();
+
+    if (reading != _lastRead) {
+        _lastDebounceTime = millis();
+    }
+
+    if (((millis() - _lastDebounceTime) > _debounceTime) && reading != _currentState) {
+        _currentState = reading;               
+    }
+
+    _lastRead = reading;
+
+    return _currentState;
+}
