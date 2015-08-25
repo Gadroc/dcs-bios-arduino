@@ -56,9 +56,7 @@ bool DcsBiosBus::processBus() {
 
             case BUS_S_ADDR:
                 _packetState = BUS_S_SIZE;
-                _packetType = in >> 5;
-                _packetAddress = (in & DCSBIOS_MAX_ADDRESS);
-                _packetBank = _packetType <= DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK3 ? _packetType : 0xff;
+                _packetAddressType = in;
                 _packetChecksum = in;
                 break;
 

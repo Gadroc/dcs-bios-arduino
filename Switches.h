@@ -24,8 +24,7 @@
 #include "InputPin.h"
 
 class PollingSwitch : public PollingInput {
-private:
-    char* _message;
+private:    
     uint8_t _lastState;
     virtual void pollInput();
 
@@ -33,7 +32,7 @@ protected:
     void init();
 
 public:
-    PollingSwitch(char* message);
+    PollingSwitch(const char* message);
     virtual uint8_t readState() = 0;
 };
 
@@ -42,8 +41,8 @@ private:
     InputPin* _inputPin;
 
 public:
-    Switch2Pos(char* message, uint8_t pin, int debounceTime = 10);
-    Switch2Pos(char* message, InputPin* inputPin);
+    Switch2Pos(const char* message, uint8_t pin, int debounceTime = 10);
+    Switch2Pos(const char* message, InputPin* inputPin);
     virtual uint8_t readState();
 };
 
@@ -53,8 +52,8 @@ private:
     InputPin* _inputPinB;
     
 public:
-    Switch3Pos(char* message, uint8_t pinA, uint8_t pinB, int debounceTime = 10);
-    Switch3Pos(char* message, InputPin* inputPinA, InputPin* inputPinB);
+    Switch3Pos(const char* message, uint8_t pinA, uint8_t pinB, int debounceTime = 10);
+    Switch3Pos(const char* message, InputPin* inputPinA, InputPin* inputPinB);
     virtual uint8_t readState();
 };
 
@@ -64,8 +63,8 @@ private:
     uint8_t _numberOfPins;
 
 public:
-    SwitchMultiPos(char* message, uint8_t* pins, uint8_t numberOfPins, int debounceTime = 10);
-    SwitchMultiPos(char* message, InputPin* inputPins, uint8_t numberOfPins);
+    SwitchMultiPos(const char* message, const uint8_t* pins, uint8_t numberOfPins, int debounceTime = 10);
+    SwitchMultiPos(const char* message, InputPin* inputPins, uint8_t numberOfPins);
     virtual uint8_t readState();
 };
 

@@ -1,8 +1,8 @@
 Protocol Overview
-The bus is setup as a single master / many slave configuration.  Slave devices are only allowed to reply to packets specifically addressed to them.  A
+The bus is setup as a single master / many slave configuration.  Slave devices are only allowed to reply to packets specifically addressed to them.
 
 Computer Interface
-DCSBios bus is interfaced to the computer by an Bus Controller.  This controller speaks through a half duplex serial protocol at 250kbps and acts as the master for the bus.  This bus controller takes care of polling across all devices on the bus and interfacing with the PC.  The controller hardware must have at least two high speed UARTS capable of 250kbps and one of those UARTs must be able to be interfaced with the PC. (Ex: ArduinoMega or Leonardo).
+DCSBios bus is interfaced to the computer by a Bus Controller.  This controller speaks through a half duplex serial protocol at 250kbps and acts as the master for the bus.  This bus controller takes care of polling across all devices on the bus and interfacing with the PC.  The controller hardware must have at least two high speed UARTS capable of 250kbps and one of those UARTs must be able to be interfaced with the PC. (Ex: ArduinoMega or Leonardo).
 
 Electrical Signaling
 Signalling is up to the cockpit designer, but the protocol is designed around a multi-drop master/slave bus.  Half-Duplex RS-485 at 250kbps is the reference signal specification.
@@ -22,8 +22,8 @@ ID - Category - Name - Description
 2 - Request - Polling Update(Bank 2) - A polling request for messages from a device containing bank 2 data.
 3 - Request - Polling Update(Bank 3) - A polling request for messages from a device containing bank 3 data.
 4 - Response - Polling Response - Returns any messages this devices has queued up since it's last poll.
-5 - Request - Config Data - Sends config data in packet
-6 - Response - Config Response - Response packet to config data sent
+5 - Request - Config Data - Sends config request to slave device.
+6 - Response - Config Response - Response packet to config request.
 
 All data in Polling Update requests are broadcast. Polling Updates should be inspected by all devices on the bus for any applicable data for display, but should only respond with a Polling Response if it was addressed to them.
 

@@ -18,10 +18,14 @@
 */
 #include "Input.h"
 
+Input::Input(const char* message) {
+    _message = message;
+}
+
 uint8_t Input::CommandBuffer[DCSBIOS_BUS_BUFFER_SIZE];
 uint8_t Input::CommandBufferSize = 0;
 
-uint8_t Input::getStringLength(char* message) {
+uint8_t Input::getStringLength(const char* message) {
     uint8_t i = 0;
     while (message[i] > 0) {
         i++;
@@ -29,7 +33,7 @@ uint8_t Input::getStringLength(char* message) {
     return i;
 }
 
-void Input::addString(char* message) {
+void Input::addString(const char* message) {
     uint8_t i = 0;
     uint8_t data = message[i++];
     while(data > 0) {
@@ -38,16 +42,16 @@ void Input::addString(char* message) {
     }
 }
 
-void Input::sendMessage(char* message, int attribute) {
+void Input::sendMessage(int attribute) {
     char buf[7];
     utoa(attribute, buf, 10);
-    sendMessage(message, buf);
+    sendMessage(buf);
 }
 
-void Input::sendMessage(char* message, char* arg) {
-    uint8_t totalSize = getStringLength(message) + getStringLength(arg) + 2;
+void Input::sendMessage(const char* arg) {
+    uint8_t totalSize = getStringLength(_message) + getStringLength(arg) + 2;
     if (CommandBufferSize + totalSize < DCSBIOS_BUS_BUFFER_SIZE) {
-        addString(message);
+        addString(_message);
         addString(" ");
         addString(arg);
         addString("\n");

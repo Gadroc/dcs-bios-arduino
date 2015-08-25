@@ -19,9 +19,10 @@
 #ifndef _DCSBIOS_H_
 #define _DCSBIOS_H_
 
-#include "FastPin.h"
-#include "FastAdc.h"
-#include "FastPwm.h"
+#include "DirectInputPin.h"
+#include "DirectOutputPin.h"
+#include "DirectAnalogInput.h"
+#include "DirectAnalogOutput.h"
 #include "BusDevice.h"
 #include "BusController.h"
 #include "Buttons.h"

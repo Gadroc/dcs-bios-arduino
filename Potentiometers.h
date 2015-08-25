@@ -21,19 +21,19 @@
 
 #include <Arduino.h>
 #include "ReadInput.h"
-#include "FastAdc.h"
+#include "AnalogInput.h"
 
 class Potentiometer : public ReadInput {
 private:
-    FastAdc _adc;
-    char* _message;
+    AnalogInput* _input;
     int _threshold;
     unsigned int _lastState;
 
     virtual void readInput();
 
 public:
-    Potentiometer(char* message, uint8_t pin, int threshold = 50);
+    Potentiometer(const char* message, uint8_t pin, int threshold = 50);
+    Potentiometer(const char* message, AnalogInput* input, int threshold = 50);
 };
 
 #endif

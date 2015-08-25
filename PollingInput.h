@@ -29,13 +29,13 @@ private:
     virtual void pollInput() = 0;
 
 public:
-    PollingInput();
+    PollingInput(const char* message);
     
     static PollingInput* firstPollingInput;    
     static void pollInputs();
 };
 
-inline PollingInput::PollingInput() {
+inline PollingInput::PollingInput(const char* message) : Input(message) {
     this->_nextPollingInput = firstPollingInput;
     firstPollingInput = this;
 }

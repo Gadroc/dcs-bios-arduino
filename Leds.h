@@ -21,7 +21,7 @@
 
 #include <Arduino.h>
 #include "OutputPin.h"
-#include "FastPwm.h"
+#include "AnalogOutput.h"
 #include "BufferListener.h"
 
 
@@ -38,16 +38,17 @@ public:
     Led(uint8_t address, uint8_t mask, OutputPin* pin);
 };
 
-class PwmLed : BufferListener {
+class DimmableLed : BufferListener {
 private:
-    FastPwm _pin;
+    AnalogOutput* _output;
     uint8_t _address;
     uint8_t _mask;
 
     void onBufferReady(uint8_t *buffer);
 
 public:
-    PwmLed(uint8_t address, uint8_t pin);
+    DimmableLed(uint8_t address, uint8_t pin);
+    DimmableLed(uint8_t address, AnalogOutput* output);
 };
 
 #endif

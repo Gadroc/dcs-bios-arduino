@@ -16,10 +16,10 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "FastPin.h"
+#include "DirectOutputPin.h"
 #include "DcsBiosCommon.h"
 
-static void turnOffPWM(uint8_t timer)
+void DirectOutputPin::turnOffPWM(uint8_t timer)
 {
 	switch (timer)
 	{
@@ -80,38 +80,26 @@ static void turnOffPWM(uint8_t timer)
 }
 
 
-FastPin::FastPin(uint8_t pin, uint8_t mode) {
-	setPin(pin, mode);
+DirectOutputPin::DirectOutputPin(uint8_t pin, uint8_t debounceTime) {
+	setPin(pin, debounceTime);
 }
 
-void FastPin::setPin(uint8_t pin, uint8_t mode) 
+void DirectOutputPin::setPin(uint8_t pin, uint8_t debounceTime) 
 {
-//	if (_pinNumber = 0xff) {
-//		_pinNumber = pin;
-		uint8_t port = digitalPinToPort(pin);
+	uint8_t port = digitalPinToPort(pin);
 
-		if (port == NOT_A_PIN) return;
+	if (port == NOT_A_PIN) return;
 
-		volatile uint8_t *modeRegister = portModeRegister(port);
+	volatile uint8_t *modeRegister = portModeRegister(port);
 
-		_outputRegister = portOutputRegister(port);
-		_inputRegister = portInputRegister(port);
-		_bitMask = digitalPinToBitMask(pin);
+	_outputRegister = portOutputRegister(port);
+	_bitMask = digitalPinToBitMask(pin);
 
-		uint8_t oldSREG = SREG;
-	    cli();
-		if (mode == INPUT) {
-			*modeRegister &= ~_bitMask;
-			*_outputRegister &= ~_bitMask;
-		} else if (mode == INPUT_PULLUP) {
-			*modeRegister &= ~_bitMask;
-			*_outputRegister |= _bitMask;
-		} else {
-			*modeRegister |= _bitMask;
-		}
-		SREG = oldSREG;
+	uint8_t oldSREG = SREG;
+  cli();
+	*modeRegister |= _bitMask;
+	SREG = oldSREG;
 
-		uint8_t timer = digitalPinToTimer(pin);
-		if (timer != NOT_ON_TIMER) turnOffPWM(timer);
-//	}
+	uint8_t timer = digitalPinToTimer(pin);
+	if (timer != NOT_ON_TIMER) turnOffPWM(timer);
 }

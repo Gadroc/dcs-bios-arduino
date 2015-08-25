@@ -16,18 +16,16 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "FastAdc.h"
+#include "DirectAnalogInput.h"
 #include "DcsBiosCommon.h"
 
-FastAdc::FastAdc(uint8_t pin, uint8_t analog_reference) {
-    setPin(pin, analog_reference);
+DirectAnalogInput::DirectAnalogInput(uint8_t pin, uint8_t analog_reference) {
+    setPin(pin);
 }
 
-void FastAdc::setPin(uint8_t pin, uint8_t analog_reference) 
+void DirectAnalogInput::setPin(uint8_t pin, uint8_t analog_reference) 
 {
-    if (_pinNumber = 0xff) {
-        _pinNumber = pin;
-        _reference = analog_reference;
+    _reference = analog_reference;
 
 #if defined(analogPinToChannel)
 #if defined(__AVR_ATmega32U4__)
@@ -44,11 +42,10 @@ void FastAdc::setPin(uint8_t pin, uint8_t analog_reference)
     if (pin >= 14) pin -= 14; // allow for channel or pin numbers
 #endif
 
-        _channel = pin;
-    }
+    _channel = pin;
 }
 
-int FastAdc::read() {
+int DirectAnalogInput::read() {
     uint8_t low, high;
 
 #if defined(ADCSRB) && defined(MUX5)

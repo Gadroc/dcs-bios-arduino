@@ -21,7 +21,7 @@
 #define _DCSBIOS_BUSCONTROLLER_H_
 
 #include <Arduino.h>
-#include "FastPin.h"
+#include "DirectOutputPin.h"
 #include "DcsBiosBus.h"
 
 #define DCSBIOS_BANK_COUNT 4
@@ -31,7 +31,7 @@
 class BusController : public DcsBiosBus
 {
     private:
-        FastPin _pcReceivePin;
+        DirectOutputPin _pcReceivePin;
         Stream* _pc;
 
         bool _waitingResponse;

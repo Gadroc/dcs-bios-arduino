@@ -16,44 +16,59 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_FASTPWM_H_
-#define _DCSBIOS_FASTPWM_H_
+#ifndef _DCSBIOS_DIRECTOUTPUTPIN_H_
+#define _DCSBIOS_DIRECTOUTPUTPIN_H_
 
 #include <Arduino.h>
-#include "FastPin.h"
+#include "OutputPin.h"
 
-// Helper class to do highspeed analog output on the arduino.
+// Helper class to do highspeed digital input/output on the arduino.
 // Built in routines are incredibly slow due to significant saftey 
 // checks and runtime lookup of port and masks.  This class sacrifices
 // some memory in order to do look ups once on port and mask values, and only
 // does pin setup in begin call.
-class FastPwm : private FastPin
+class DirectOutputPin : public OutputPin
 {
 private:		
-	uint8_t _timer;
+	uint8_t _bitMask;					// Bit mask of pin in register
+	volatile uint8_t *_outputRegister;	// Write register for pin
+	static void turnOffPWM(uint8_t timer);
 
 public:
-	FastPwm();
-	FastPwm(uint8_t pin);
+	DirectOutputPin();
+	DirectOutputPin(uint8_t pin, uint8_t debounceTime = 10);
 
-	uint8_t getPin();
-	void setPin(uint8_t pin);
+	void setPin(uint8_t pin, uint8_t debounceTime = 10);
 
-	bool isSetup();
-
-	void write(int value);
+	void clear();	
+	void set();
+	void setState(bool state);
 };
 
-inline FastPwm::FastPwm() : FastPin() {
-}
+inline DirectOutputPin::DirectOutputPin() {}
 
-inline uint8_t FastPwm::getPin()
+inline void DirectOutputPin::clear()
 {
-	return FastPin::getPin();
+	uint8_t oldSREG = SREG;
+	cli();
+	 *_outputRegister &= ~_bitMask; 
+ 	SREG = oldSREG;		
 }
 
-inline bool FastPwm::isSetup() {
-	return FastPin::isSetup();
+inline void DirectOutputPin::set()
+{
+	uint8_t oldSREG = SREG;
+	cli();
+	*_outputRegister |= _bitMask;
+ 	SREG = oldSREG;		
+}
+
+inline void DirectOutputPin::setState(bool state) {
+    if (state) {
+        set();
+    } else {
+        clear();
+    }
 }
 
 #endif

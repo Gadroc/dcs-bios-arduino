@@ -29,13 +29,13 @@ private:
     virtual void readInput() = 0;
 
 public:
-    ReadInput();
+    ReadInput(const char* message);
     
     static ReadInput* firstReadInput;      
     static void readInputs();
 };
 
-inline ReadInput::ReadInput() {
+inline ReadInput::ReadInput(const char* message) : Input(message) {
     this->_nextReadInput = firstReadInput;
     firstReadInput = this;
 }

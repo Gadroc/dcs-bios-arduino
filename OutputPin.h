@@ -23,18 +23,9 @@
 
 // Interface for all input pins.
 class OutputPin {
-public:
-    void setState(bool state);
+public:    
     virtual void set() = 0;
     virtual void clear() = 0;
 };
-
-inline void OutputPin::setState(bool state) {
-    if (state) {
-        set();
-    } else {
-        clear();
-    }
-}
 
 #endif

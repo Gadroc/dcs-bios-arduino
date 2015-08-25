@@ -16,34 +16,18 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef _DCSBIOS_ANALOGINPUT_H_
+#define _DCSBIOS_ANALOGINPUT_H_
 
-#include "FastInputPin.h"
+// Interface for all AnalogInputs
+class AnalogInput
+{
+public:
+    // Returns the maximum value that this adc can return.
+    virtual int maxValue() = 0;
 
-FastInputPin::FastInputPin() {}
+    // Returns a value between 0 and maxValue() as the measurement from the ADC.
+    virtual int read() = 0;
+};
 
-FastInputPin::FastInputPin(uint8_t pin, uint8_t debounceTime) {
-    setPin(pin, debounceTime);
-}
-
-void FastInputPin::setPin(uint8_t pin, uint8_t debounceTime) {
-    _pin.setPin(pin, INPUT_PULLUP);
-    _debounceTime = debounceTime;
-    _currentState = _pin.read();
-    _lastRead = _pin.read();
-}
-
-uint8_t FastInputPin::readState() {
-    uint8_t reading = _pin.read();
-
-    if (reading != _lastRead) {
-        _lastDebounceTime = millis();
-    }
-
-    if (((millis() - _lastDebounceTime) > _debounceTime) && reading != _currentState) {
-        _currentState = reading;               
-    }
-
-    _lastRead = reading;
-
-    return _currentState;
-}
+#endif

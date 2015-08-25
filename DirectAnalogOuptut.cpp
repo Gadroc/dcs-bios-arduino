@@ -16,20 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "FastPwm.h"
+#include "DirectAnalogOutput.h"
 #include "DcsBiosCommon.h"
 
-FastPwm::FastPwm(uint8_t pin) {
+DirectAnalogOutput::DirectAnalogOutput(uint8_t pin) {
 	setPin(pin);
 }
 
-void FastPwm::setPin(uint8_t pin) 
+void DirectAnalogOutput::setPin(uint8_t pin) 
 {
-	FastPin::setPin(pin, OUTPUT);
+	uint8_t port = digitalPinToPort(pin);
+	if (port == NOT_A_PIN) return;
+
+	volatile uint8_t *modeRegister = portModeRegister(port);
+	uint8_t _bitMask = digitalPinToBitMask(pin);
+
+	uint8_t oldSREG = SREG;
+  cli();
+	*modeRegister |= _bitMask;
+	SREG = oldSREG;
+
 	_timer = digitalPinToTimer(pin);
 }
 
-void FastPwm::write(int val) {
+void DirectAnalogOutput::write(int val) {
 	switch(_timer) {
 		// XXX fix needed for atmega8
 		#if defined(TCCR0) && defined(COM00) && !defined(__AVR_ATmega8__)
@@ -190,13 +200,5 @@ void FastPwm::write(int val) {
 			OCR5C = val; // set pwm duty
 			break;
 		#endif
-
-		case NOT_ON_TIMER:
-		default:
-			if (val < 128) {
-				clear();
-			} else {
-				set();
-			}		
 	}
 }

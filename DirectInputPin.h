@@ -16,27 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_FASTINPUTPIN_H_
-#define _DCSBIOS_FASTINPUTPIN_H_
+#ifndef _DCSBIOS_DIRECTINPUTPIN_H_
+#define _DCSBIOS_DIRECTINPUTPIN_H_
 
 #include <Arduino.h>
-#include "FastPin.h"
 #include "InputPin.h"
 
-// Implementation of an input pin based on direct reading of a Arduino pin status using FastPin.
-class FastInputPin : public InputPin {
-private:
-    FastPin _pin;
-    uint8_t _debounceTime;  // Amount of time to read same value before switching current state
-    uint8_t _currentState; // Current state returned to input
-    uint8_t _lastRead; // Last value read from pin
-    long _lastDebounceTime; // Time since last state change on pin
+class DirectInputPin : public InputPin
+{
+private:		
+	uint8_t _bitMask;					// Bit mask of pin in register
+	volatile uint8_t *_inputRegister;   // Read register for pin
+
+	static void turnOffPWM(uint8_t timer);
 
 public:
-    FastInputPin();
-    FastInputPin(uint8_t pin, uint8_t debounceTime = 10);
-    void setPin(uint8_t pin, uint8_t debounceTime = 10);
-    virtual uint8_t readState();
+	DirectInputPin();
+	DirectInputPin(uint8_t pin, uint8_t debounceTime = 10);
+	void setPin(uint8_t pin, uint8_t debounceTime = 10);
+
+	uint8_t readState();
 };
+
+inline DirectInputPin::DirectInputPin() {}
+
+inline uint8_t DirectInputPin::readState()
+{
+	return (*_inputRegister & _bitMask) ? HIGH : LOW;
+}
 
 #endif

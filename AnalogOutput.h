@@ -16,23 +16,17 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef _DCSBIOS_ANALOGOUTPUT_H_
+#define _DCSBIOS_ANALOGOUTPUT_H_
 
-#include "FastOutputPin.h"
+class AnalogOutput 
+{
+public:
+    // Returns the max value that this analog output can represent
+    virtual int maxValue() = 0;
 
-FastOutputPin::FastOutputPin() {}
+    // Writes a value to the analog output.  From 0 to maxValue()
+    virtual void write(int value) = 0;
+};
 
-FastOutputPin::FastOutputPin(uint8_t pin) {
-    setPin(pin);
-}
-
-void FastOutputPin::setPin(uint8_t pin) {
-    _pin.setPin(pin, OUTPUT);
-}
-
-void FastOutputPin::set() {
-    _pin.set();
-}
-
-void FastOutputPin::clear() {
-    _pin.clear();
-}
+#endif

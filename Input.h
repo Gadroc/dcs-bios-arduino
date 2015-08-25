@@ -24,15 +24,19 @@
 
 class Input {
 private:
-    static uint8_t getStringLength(char* message);
-    static void addString(char* message);    
+    const char* _message;
+
+    static uint8_t getStringLength(const char* message);
+    static void addString(const char* message);    
 
 public:
+    Input(const char* message);
+
     static uint8_t CommandBuffer[DCSBIOS_BUS_BUFFER_SIZE];
     static uint8_t CommandBufferSize;
 
-    static void sendMessage(char* message, int attribute);
-    static void sendMessage(char* message, char* arg);
+    void sendMessage(int attribute);
+    void sendMessage(const char* arg);
 };
 
 #endif

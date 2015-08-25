@@ -17,18 +17,22 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Potentiometers.h"
+#include "DirectAnalogInput.h"
 
-Potentiometer::Potentiometer(char* message, uint8_t pin, int threshold) {
-    _message = message;
-    _adc.setPin(pin);
+Potentiometer::Potentiometer(const char* message, uint8_t pin, int threshold) : ReadInput(message) {
+    Potentiometer(message, new DirectAnalogInput(pin));
+}
+
+Potentiometer::Potentiometer(const char* message, AnalogInput* input, int threshold) : ReadInput(message) {
+    _input = input;
     _threshold = threshold;
-    _lastState = _adc.read();
+    _lastState = _input->read();
 }
 
 void Potentiometer::readInput() {
-    unsigned int reading = _adc.read();
+    unsigned int reading = _input->read();
     if (abs(reading-_lastState) > _threshold) {
-        sendMessage(_message, map(reading, 0, 1023, 0, 65535));
+        sendMessage(map(reading, 0, _input->maxValue(), 0, 65535));
         _lastState = reading;
     }
 }

@@ -17,14 +17,13 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Buttons.h"
-#include "FastInputPin.h"
+#include "DirectInputPin.h"
 
-ActionButton::ActionButton(char* message, char* arg, uint8_t pin, int debounceTime) {
-    ActionButton(message, arg, new FastInputPin(pin, debounceTime));
+ActionButton::ActionButton(const char* message, const char* arg, uint8_t pin, int debounceTime) : PollingInput(message) {
+    ActionButton(message, arg, new DirectInputPin(pin, debounceTime));
 }
 
-ActionButton::ActionButton(char* message, char* arg, InputPin* pin) {
-    _message = message;
+ActionButton::ActionButton(const char* message, const char* arg, InputPin* pin) : PollingInput(message) {
     _arg = arg;
     _pin = pin;
     _lastState = pin->readState();
@@ -34,7 +33,7 @@ void ActionButton::pollInput() {
     uint8_t state = _pin->readState();
     if (state != _lastState) {
         if (state == LOW) {
-            sendMessage(_message, _arg);
+            sendMessage(_arg);
         }
         _lastState = state;
     }

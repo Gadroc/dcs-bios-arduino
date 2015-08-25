@@ -16,24 +16,34 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_FASTOUTPUTPIN_H_
-#define _DCSBIOS_FASTOUTPUTPIN_H_
+#ifndef _DCSBIOS_DIRECTANALOG_H_
+#define _DCSBIOS_DIRECTANALOG_H_
 
 #include <Arduino.h>
-#include "FastPin.h"
-#include "OutputPin.h"
+#include "AnalogOutput.h"
 
-// Implementation of an input pin based on direct reading of a Arduino pin status using FastPin.
-class FastOutputPin : public OutputPin {
-private:
-    FastPin _pin;
+// Helper class to do highspeed analog output on the arduino.
+// Built in routines are incredibly slow due to significant saftey 
+// checks and runtime lookup of port and masks.  This class sacrifices
+// some memory in order to do look ups once on port and mask values, and only
+// does pin setup in begin call.
+class DirectAnalogOutput : public AnalogOutput
+{
+private:		
+	uint8_t _timer;
 
 public:
-    FastOutputPin();
-    FastOutputPin(uint8_t pin);
-    void setPin(uint8_t pin);
-    virtual void set();
-    virtual void clear();
+    DirectAnalogOutput();
+	DirectAnalogOutput(uint8_t pin);
+
+	void setPin(uint8_t pin);
+
+    virtual int maxValue();
+	virtual void write(int value);
 };
+
+inline DirectAnalogOutput::DirectAnalogOutput() {}
+
+inline int DirectAnalogOutput::maxValue() { return 255; }
 
 #endif

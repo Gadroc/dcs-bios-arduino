@@ -21,7 +21,7 @@
 
 #include <Arduino.h>
 #include "DcsBiosCommon.h"
-#include "FastPin.h"
+#include "DirectOutputPin.h"
 
 #define DCSBIOS_PACKET_START_BYTE 0xbb
 #define DCSBIOS_PACKET_LEADIN_BYTE 0x88
@@ -30,12 +30,10 @@
 class DcsBiosBus {
     private:
         Stream* _stream;
-        FastPin _txPin;
+        DirectOutputPin _txPin;
 
-        uint8_t _packetState;
-        uint8_t _packetAddress;
-        uint8_t _packetType;
-        uint8_t _packetBank;
+        uint8_t _packetState;        
+        uint8_t _packetAddressType;
         uint8_t _packetDataSize;
         uint8_t _packetDataPointer;
         uint8_t _packetDataBuffer[DCSBIOS_BUS_BUFFER_SIZE];
@@ -59,15 +57,16 @@ class DcsBiosBus {
 };
 
 inline uint8_t DcsBiosBus::getPacketAddress() {
-    return _packetAddress;
+    return _packetAddressType & DCSBIOS_MAX_ADDRESS;
 }
 
 inline uint8_t DcsBiosBus::getPacketType() {
-    return _packetType;
+    return _packetAddressType >> 5;
 }
 
 inline uint8_t DcsBiosBus::getPacketBank() {
-    return _packetBank;
+    uint8_t packetType = getPacketType();
+    return  packetType <= DCSBIOS_PACKETYPE_POLLING_UPDATE_BANK3 ? packetType : 0xff;
 }
 
 inline uint8_t DcsBiosBus::getPacketDataSize() {

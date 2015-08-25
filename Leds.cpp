@@ -17,10 +17,11 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Leds.h"
-#include "FastOutputPin.h"
+#include "DirectOutputPin.h"
+#include "DirectAnalogOutput.h"
 
 Led::Led(uint8_t address, uint8_t mask, uint8_t pin) {
-    Led(address, mask, new FastOutputPin(pin));
+    Led(address, mask, new DirectOutputPin(pin));
 }
 
 Led::Led(uint8_t address, uint8_t mask, OutputPin* pin) {    
@@ -37,13 +38,16 @@ void Led::onBufferReady(uint8_t *buffer) {
     }
 }
 
-PwmLed::PwmLed(uint8_t address, uint8_t pin) {
-    _address = address;
-    _pin.setPin(pin);
-    _pin.write(0);
+DimmableLed::DimmableLed(uint8_t address, uint8_t pin) {
+    DimmableLed(address, new DirectAnalogOutput(pin));
 }
 
-void PwmLed::onBufferReady(uint8_t *buffer) {
+DimmableLed::DimmableLed(uint8_t address, AnalogOutput* output) {
+    _output = output;
+    _output->write(0);
+}
+
+void DimmableLed::onBufferReady(uint8_t *buffer) {
     unsigned int value = (buffer[_address]) << 8 | buffer[_address+1];
-    _pin.write(map(value, 0, 65535, 0, 255));
+    _output->write(map(value, 0, 65535, 0, _output->maxValue()));
 }

@@ -16,46 +16,35 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_FASTADC_H_
-#define _DCSBIOS_FASTADC_H_
+#ifndef _DCSBIOS_DIRECTANALOGINPUT_H_
+#define _DCSBIOS_DIRECTANALOGINPUT_H_
 
 #include <Arduino.h>
+#include <AnalogInput.h>
 
 // Helper class to do highspeed analog input on the arduino.
 // Built in routines are slow due to significant saftey 
 // checks and runtime lookup of port and masks.  This class sacrifices
 // some memory in order to do look ups once on port and mask values, and only
 // does pin setup in begin call.
-class FastAdc 
+class DirectAnalogInput : public AnalogInput
 {
 private:
-    uint8_t _pinNumber;     // Pin number to analog read / write to
     uint8_t _channel;       // Analog channel to read from for pin
     uint8_t _reference;
 
 public:
-    FastAdc();
-    FastAdc(uint8_t pin, uint8_t analog_reference = DEFAULT);
+    DirectAnalogInput();
+    DirectAnalogInput(uint8_t pin, uint8_t analog_reference = DEFAULT);
     
     void setPin(uint8_t pin, uint8_t analog_reference = DEFAULT);
-    uint8_t getPin();
-    bool isSetup();
 
-    int read();
+    virtual int maxValue();
+    virtual int read();
 };
 
-inline FastAdc::FastAdc() 
-{
-    _pinNumber = 0xff;
-}
+inline DirectAnalogInput::DirectAnalogInput() {}
 
-inline uint8_t FastAdc::getPin()
-{
-    return _pinNumber;
-}
-
-inline bool FastAdc::isSetup() {
-    return _pinNumber != 0xff;
-}
+inline int DirectAnalogInput::maxValue() { return 1023; }
 
 #endif

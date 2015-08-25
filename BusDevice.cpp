@@ -24,7 +24,6 @@
 
 void BusDevice::begin(Stream *busStream, int txPin, uint8_t address, uint8_t bank) {
     initBus(busStream, txPin);
-
     _address = address;
     _bank = bank;
 }
