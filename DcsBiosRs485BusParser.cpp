@@ -16,14 +16,14 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "DcsBiosRs485Parser.h"
+#include "DcsBiosRs485BusParser.h"
 
-DcsBiosRs485Parser::DcsBiosRs485Parser() {
+DcsBiosRs485BusParser::DcsBiosRs485BusParser() {
     _packetState = PACKET_START;
     _packetDataByteReady = false;
 }
 
-void DcsBiosRs485Parser::processByte(int in) {
+void DcsBiosRs485BusParser::processByte(int in) {
     _packetDataByteReady = false;
     if (_packetState == PACKET_COMPLETE || _packetState == PACKET_TIMEOUT) {
         _packetState = PACKET_START;        
@@ -32,13 +32,13 @@ void DcsBiosRs485Parser::processByte(int in) {
     if (in > -1) {
         switch(_packetState) {
             case PACKET_START:
-                if (in == DCSBIOS_PACKET_START_BYTE) {
+                if (in == DCSBIOS_RS485_PACKET_START_BYTE) {
                     _packetState = PACKET_LEADIN;
                 }
                 break;
 
             case PACKET_LEADIN:
-                if (in == DCSBIOS_PACKET_LEADIN_BYTE)
+                if (in == DCSBIOS_RS485_PACKET_LEADIN_BYTE)
                 {
                     _packetState = PACKET_ADDRTYPE;
                 } else {
@@ -55,7 +55,7 @@ void DcsBiosRs485Parser::processByte(int in) {
                 _packetDataSize = in;
                 _packetDataRemaining = in;
 
-                if (_packetDataSize > DCSBIOS_MAX_PACKET_DATA_SIZE) {
+                if (_packetDataSize > DCSBIOS_RS485_MAX_PACKET_DATA_SIZE) {
                     _packetState = PACKET_START;
                 }
 
@@ -85,9 +85,9 @@ void DcsBiosRs485Parser::processByte(int in) {
     }
 }
 
-void DcsBiosRs485Parser::sendPacket(Stream* stream, uint8_t packetType, uint8_t address, uint8_t* data, uint8_t size, uint8_t offset) {
-    stream->write(DCSBIOS_PACKET_START_BYTE);
-    stream->write(DCSBIOS_PACKET_LEADIN_BYTE);
+void DcsBiosRs485BusParser::sendPacket(Stream* stream, uint8_t packetType, uint8_t address, uint8_t* data, uint8_t size, uint8_t offset) {
+    stream->write(DCSBIOS_RS485_PACKET_START_BYTE);
+    stream->write(DCSBIOS_RS485_PACKET_LEADIN_BYTE);
     stream->write((address & 31) | (packetType << 5));
     if (data == 0 || size == 0) {
         stream->write((uint8_t)0);

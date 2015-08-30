@@ -21,7 +21,7 @@
 
 #include <Arduino.h>
 #include "ExportStreamParser.h"
-#include "DcsBiosRs485Parser.h"
+#include "DcsBiosRs485BusParser.h"
 #include "DirectOutputPin.h"
 
 class DcsBiosRs485Device {
@@ -35,7 +35,7 @@ private:
     void sendPollResponse();
     void addPollingResponseString(const char* string);
 
-    static uint8_t pollingResponseBuffer[DCSBIOS_MAX_PACKET_DATA_SIZE];
+    static uint8_t pollingResponseBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];
     static uint8_t pollingResponseBufferSize;
 
 public:

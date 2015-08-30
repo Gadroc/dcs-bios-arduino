@@ -20,10 +20,17 @@
 #define _DCSBIOS_BUSCONTROLLERS485_H_
 
 #include <Arduino.h>
-#include "DcsBiosRs485Parser.h"
+#include "DcsBiosRs485BusParser.h"
+#include "DcsBiosRs485PcParser.h"
 #include "DirectOutputPin.h"
 
-#define DCSBIOS_RS485_PC_BUFFER_SIZE 255
+#define PC_NOTIFICATION_STATUSREADY 'r'
+#define PC_NOTIFICATION_STATUSFULL 't'
+#define PC_NOTIFICATION_DATARECEIVED 'v'
+#define PC_NOTIFICATION_DATAERROR 'x'    
+#define PC_NOTIFICATION_MESSAGE 'm'    
+
+
 #define DCSBIOS_RS485_DEVICE_RESPONSE_TIMEOUT 2
 
 class DcsBiosRs485Controller {
@@ -32,27 +39,19 @@ private:
     DcsBiosRs485Parser _bus;
     DirectOutputPin _busTxPin;
     uint8_t _busBufferSize;
-    uint8_t _busBuffer[DCSBIOS_MAX_PACKET_DATA_SIZE];
+    uint8_t _busBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];
     bool _busWaitingResponse;
     uint8_t _busPollingAddress;
-    unsigned long _busPollingTimeout;    
+    unsigned long _busPollingTimeout;
 
     Stream* _pcStream;
-    uint8_t _pcBufferSize;
-    uint8_t _pcBufferTxIndex;
-    uint8_t _pcBufferLoadIndex;
-    uint8_t _pcBuffer[DCSBIOS_RS485_PC_BUFFER_SIZE];
-    uint8_t _pcCommandState;
-    unsigned long _pcCommandTimeout;
+    DcsBiosRs485PcParser _pc;
 
     void processBusInput();
     void sendPollingPacket();
     void processBusPacket();    
 
     void processPcInput();
-    void parseCommand(uint8_t in);
-    void parseExportDataSize(uint8_t in);
-    void parseExportData(uint8_t in);
 
 public:
     void begin(Stream* busStream, int txPin, Stream* pcStream);

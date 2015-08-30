@@ -23,7 +23,7 @@ Input::Input(const char* message) {
 }
 
 void Input::sendMessage(int attribute) {
-    char buf[7];
+    char buf[12];
     utoa(attribute, buf, 10);
     sendMessage(buf);
 }

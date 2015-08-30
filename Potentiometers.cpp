@@ -38,7 +38,7 @@ void Potentiometer::initInput() {
 
 void Potentiometer::pollInput() {
     unsigned long current = millis();
-    if ((long)current-_nextPoll >= 0) {
+    if ((long)(current-_nextPoll) >= 0) {
         unsigned int reading = _input->read();
         if (abs(reading-_lastState) > _threshold) {
             sendMessage(map(reading, 0, _input->maxValue(), 0, 65535));

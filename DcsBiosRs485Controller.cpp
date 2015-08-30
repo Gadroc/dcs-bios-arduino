@@ -18,20 +18,6 @@
 */
 #include "DcsBiosRs485Controller.h"
 
-// Command values from host system
-#define PC_COMMAND_STATUS 's'
-#define PC_COMMAND_ADD_EXPORT_DATA 'e'
-
-#define PC_NOTIFICATION_SEND_DATA 'r'
-#define PC_NOTIFICATION_TRANSMITTING_DATA 't'
-#define PC_NOTIFICATION_COMMAND_TIMEOUT 'x'
-
-#define PC_STATE_WAITING 0
-#define PC_STATE_EXPORT_DATA_SIZE 1
-#define PC_STATE_EXPORT_DATA 2
-
-#define PC_COMMAND_TIMEOUT 250
-
 void DcsBiosRs485Controller::begin(Stream* busStream, int txPin, Stream* pcStream) {
     _busStream = busStream;
     _busTxPin.setPin(txPin);
@@ -39,10 +25,6 @@ void DcsBiosRs485Controller::begin(Stream* busStream, int txPin, Stream* pcStrea
     _busBufferSize = 0;
 
     _pcStream = pcStream;
-    _pcBufferSize = 0;
-    _pcBufferLoadIndex = 0;
-    _pcBufferTxIndex = 0;
-    _pcCommandState = PC_STATE_WAITING;
 
     _busWaitingResponse = false;
     _busPollingAddress = 0;
@@ -64,23 +46,18 @@ void DcsBiosRs485Controller::sendPollingPacket() {
     delayMicroseconds(10);
 
     _busTxPin.set();
-    if (_pcCommandState == PC_STATE_WAITING && _pcBufferSize > 0) {
-        uint8_t size = _pcBufferSize < DCSBIOS_MAX_PACKET_DATA_SIZE ? _pcBufferSize : DCSBIOS_MAX_PACKET_DATA_SIZE;
-        _bus.sendPacket(_busStream, DCSBIOS_PACKETYPE_POLLING_REQUEST, _busPollingAddress, _pcBuffer, size);
-        _pcBufferSize -= size;
-        _pcBufferTxIndex += size;
-        if (_pcBufferSize == 0) {
-            _pcStream->write(PC_NOTIFICATION_SEND_DATA);
-        }
+    if (_pc.bufferReady()) {
+        _bus.sendPacket(_busStream, DCSBIOS_RS485_PACKETYPE_POLLING_REQUEST, _busPollingAddress, _pc.getCurrentBuffer(), _pc.getCurrentBufferSize());
+        _pc.markBufferComplete();
     } else {
-        _bus.sendPacket(_busStream, DCSBIOS_PACKETYPE_POLLING_REQUEST, _busPollingAddress);        
+        _bus.sendPacket(_busStream, DCSBIOS_RS485_PACKETYPE_POLLING_REQUEST, _busPollingAddress);        
     }
     _busStream->flush();
     _busTxPin.clear();
 
     _busPollingAddress++;
 
-    if (_busPollingAddress > DCSBIOS_MAX_DEVICE_ADDRESS) {
+    if (_busPollingAddress > DCSBIOS_RS485_MAX_DEVICE_ADDRESS) {
         _busPollingAddress = 0;
     }
   
@@ -94,7 +71,7 @@ void DcsBiosRs485Controller::processBusInput() {
     do {
         _bus.processByte(in);
 
-        if (_bus.hasPacketDataByte() && _busBufferSize < DCSBIOS_MAX_PACKET_DATA_SIZE) {
+        if (_bus.hasPacketDataByte() && _busBufferSize < DCSBIOS_RS485_MAX_PACKET_DATA_SIZE) {
             _busBuffer[_busBufferSize++] = _bus.getPacketDataByte();
         }
 
@@ -116,7 +93,7 @@ void DcsBiosRs485Controller::processBusInput() {
 }
 
 void DcsBiosRs485Controller::processBusPacket() {
-    if (_busBufferSize > 0 && _bus.getPacketType() == DCSBIOS_PACKETYPE_POLLING_RESPONSE) {
+    if (_busBufferSize > 0 && _bus.getPacketType() == DCSBIOS_RS485_PACKETYPE_POLLING_RESPONSE) {
         _pcStream->write('m');
         _pcStream->write(_busBufferSize);
         _pcStream->write(_busBuffer, _busBufferSize);
@@ -125,60 +102,22 @@ void DcsBiosRs485Controller::processBusPacket() {
 }
 
 void DcsBiosRs485Controller::processPcInput() {
-    unsigned long current = millis();
-    int in = _pcStream->read();
-    if (in == -1) {
-        if (_pcCommandState != PC_STATE_WAITING && (long)(current - _pcCommandTimeout) >= 0) {
-            _pcCommandState = PC_STATE_WAITING;
-            _pcStream->write(PC_NOTIFICATION_COMMAND_TIMEOUT);
-        }
-    } else {
-        switch(_pcCommandState) {
-            case PC_STATE_WAITING:
-                parseCommand(in);
-                break;
+    _pc.processByte(_pcStream->read());
+    switch (_pc.getState()) {
+        case PC_STATUSREADY:
+            _pcStream->write(PC_NOTIFICATION_STATUSREADY);
+            break;
 
-            case PC_STATE_EXPORT_DATA_SIZE:
-                _pcCommandTimeout = current + PC_COMMAND_TIMEOUT;
-                parseExportDataSize(in);
-                break;
+        case PC_STATUSFULL:
+            _pcStream->write(PC_NOTIFICATION_STATUSFULL);
+            break;
 
-            case PC_STATE_EXPORT_DATA:
-                _pcCommandTimeout = current + PC_COMMAND_TIMEOUT;
-                parseExportData(in);
-                break;
-        }
-    }
-}
+        case PC_DATARECEIVED:
+            _pcStream->write(PC_NOTIFICATION_DATARECEIVED);
+            break;
 
-void DcsBiosRs485Controller::parseCommand(uint8_t in) {
-    if (in == PC_COMMAND_STATUS) {
-        if (_pcBufferSize > 0) {
-            _pcStream->write(PC_NOTIFICATION_TRANSMITTING_DATA);
-        } else {            
-            _pcStream->write(PC_NOTIFICATION_SEND_DATA);
-        }
-    }
-
-    if (in == PC_COMMAND_ADD_EXPORT_DATA && _pcBufferSize == 0) {
-        _pcCommandState = PC_STATE_EXPORT_DATA_SIZE;
-    }
-}
-
-void DcsBiosRs485Controller::parseExportDataSize(uint8_t in) {
-    _pcBufferSize = in;
-    _pcBufferLoadIndex = 0;
-    if (_pcBufferSize == 0) {
-        _pcCommandState = PC_STATE_WAITING;
-    } else {
-        _pcCommandState = PC_STATE_EXPORT_DATA;
-    }
-}
-
-void DcsBiosRs485Controller::parseExportData(uint8_t in) {
-    _pcBuffer[_pcBufferLoadIndex++] = in;
-    if (_pcBufferLoadIndex == _pcBufferSize) {
-        _pcBufferTxIndex = 0;
-        _pcCommandState = PC_STATE_WAITING;
+        case PC_DATAERROR:
+            _pcStream->write(PC_NOTIFICATION_DATAERROR);
+            break;
     }
 }
