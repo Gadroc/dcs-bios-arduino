@@ -16,26 +16,9 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_BUFFERLISTENER_H_
-#define _DCSBIOS_BUFFERLISTENER_H_
+#include "ExportStreamListener.h"
 
-#include <Arduino.h>
-
-class BufferListener {
-    private:
-        virtual void onBufferReady(uint8_t *buffer) = 0;
-        BufferListener* _nextListener;
-
-    public:
-        static BufferListener* firstBufferStreamListener;
-        static void handleBufferReady(uint8_t *buffer);
-
-        BufferListener();
-};
-
-inline BufferListener::BufferListener() {
-    this->_nextListener = firstBufferStreamListener;
-    firstBufferStreamListener = this;
+ExportStreamListener::ExportStreamListener() {
+    this->nextExportStreamListener = firstExportStreamListener;
+    firstExportStreamListener = this;
 }
-
-#endif

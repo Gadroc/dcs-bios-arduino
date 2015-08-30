@@ -1,5 +1,7 @@
-DcsBiosDevice	KEYWORD1
-DcsBiosController	KEYWORD1
+DcsBiosSerialDevice	KEYWORD1
+DcsBiosRs485Controller	KEYWORD1
+DcsBiosRs485Device	KEYWORD1
+DcsBiosRs485Parser	KEYWORD1
 Led	KEYWORD1
 DimmableLed	KEYWORD1
 Switch2Pos	KEYWORD1

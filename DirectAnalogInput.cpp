@@ -17,7 +17,10 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "DirectAnalogInput.h"
-#include "DcsBiosCommon.h"
+
+#ifndef sbi
+#define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
+#endif
 
 DirectAnalogInput::DirectAnalogInput(uint8_t pin, uint8_t analog_reference) {
     setPin(pin);

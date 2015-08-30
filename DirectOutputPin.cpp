@@ -17,7 +17,10 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "DirectOutputPin.h"
-#include "DcsBiosCommon.h"
+
+#ifndef cbi
+#define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
+#endif
 
 void DirectOutputPin::turnOffPWM(uint8_t timer)
 {
@@ -80,11 +83,11 @@ void DirectOutputPin::turnOffPWM(uint8_t timer)
 }
 
 
-DirectOutputPin::DirectOutputPin(uint8_t pin, uint8_t debounceTime) {
-	setPin(pin, debounceTime);
+DirectOutputPin::DirectOutputPin(uint8_t pin) {
+	setPin(pin);
 }
 
-void DirectOutputPin::setPin(uint8_t pin, uint8_t debounceTime) 
+void DirectOutputPin::setPin(uint8_t pin) 
 {
 	uint8_t port = digitalPinToPort(pin);
 
@@ -96,7 +99,7 @@ void DirectOutputPin::setPin(uint8_t pin, uint8_t debounceTime)
 	_bitMask = digitalPinToBitMask(pin);
 
 	uint8_t oldSREG = SREG;
-  cli();
+	cli();
 	*modeRegister |= _bitMask;
 	SREG = oldSREG;
 

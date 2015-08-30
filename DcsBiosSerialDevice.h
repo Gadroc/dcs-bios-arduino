@@ -1,5 +1,5 @@
 /*
-	Copyright 2015 Craig Courtney
+    Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,28 +16,23 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_READINPUT_H_
-#define _DCSBIOS_READINPUT_H_
+#ifndef _DCSBIOS_DCSSERIALDEVICE_H_
+#define _DCSBIOS_DCSSERIALDEVICE_H_
 
 #include <Arduino.h>
-#include "Input.h"
-#include "DcsBiosCommon.h"
+#include "ExportStreamParser.h"
 
-class ReadInput : public Input {
+class DcsBiosSerialDevice {
 private:
-    ReadInput* _nextReadInput;
-    virtual void readInput() = 0;
+    ExportStreamParser _parser;
+    Stream* _serial;
 
 public:
-    ReadInput(const char* message);
-    
-    static ReadInput* firstReadInput;      
-    static void readInputs();
-};
+    DcsBiosSerialDevice();
+    void begin(Stream *serial);
+    void sendDcsBiosMessage(const char* msg, const char* arg);
 
-inline ReadInput::ReadInput(const char* message) : Input(message) {
-    this->_nextReadInput = firstReadInput;
-    firstReadInput = this;
-}
+    virtual void process();
+};
 
 #endif

@@ -30,7 +30,12 @@
 class DirectAnalogOutput : public AnalogOutput
 {
 private:		
+    uint8_t _bitMask;                   // Bit mask of pin in register
+    volatile uint8_t *_outputRegister;  // Write register for pin    
 	uint8_t _timer;
+
+    void on();
+    void off();
 
 public:
     DirectAnalogOutput();
@@ -38,12 +43,12 @@ public:
 
 	void setPin(uint8_t pin);
 
-    virtual int maxValue();
-	virtual void write(int value);
+    virtual unsigned int maxValue();
+	virtual void write(unsigned int value);
 };
 
 inline DirectAnalogOutput::DirectAnalogOutput() {}
 
-inline int DirectAnalogOutput::maxValue() { return 255; }
+inline unsigned int DirectAnalogOutput::maxValue() { return 255; }
 
 #endif

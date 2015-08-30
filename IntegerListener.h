@@ -16,14 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "BufferListener.h"
+#ifndef _DCSBIOS_INTEGERLISTENER_H_
+#define _DCSBIOS_INTEGERLISTENER_H_
 
-BufferListener* BufferListener::firstBufferStreamListener;
+#include <Arduino.h>
+#include "ExportStreamListener.h"
 
-void BufferListener::handleBufferReady(uint8_t *buffer) {
-    BufferListener* bl = firstBufferStreamListener;
-    while (bl) {
-        bl->onBufferReady(buffer);
-        bl = bl->_nextListener;
-    }
-}
+class IntegerListener : ExportStreamListener {
+private:
+    unsigned int _address;
+    unsigned int _mask;
+    uint8_t _shift;
+
+protected:
+    unsigned int data;
+
+public:
+    IntegerListener(unsigned int address, unsigned int mask, uint8_t shift);
+    virtual void onDcsBiosWrite(unsigned int address, unsigned int value);    
+};
+
+#endif

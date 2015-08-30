@@ -23,10 +23,10 @@ class AnalogOutput
 {
 public:
     // Returns the max value that this analog output can represent
-    virtual int maxValue() = 0;
+    virtual unsigned int maxValue() = 0;
 
     // Writes a value to the analog output.  From 0 to maxValue()
-    virtual void write(int value) = 0;
+    virtual void write(unsigned int value) = 0;
 };
 
 #endif

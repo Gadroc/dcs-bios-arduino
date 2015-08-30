@@ -36,9 +36,9 @@ private:
 
 public:
 	DirectOutputPin();
-	DirectOutputPin(uint8_t pin, uint8_t debounceTime = 10);
+	DirectOutputPin(uint8_t pin);
 
-	void setPin(uint8_t pin, uint8_t debounceTime = 10);
+	void setPin(uint8_t pin);
 
 	void clear();	
 	void set();

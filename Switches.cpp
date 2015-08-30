@@ -16,13 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-
 #include "Switches.h"
 #include "DirectInputPin.h"
 
 PollingSwitch::PollingSwitch(const char* message) : PollingInput(message) {}
 
-void PollingSwitch::init() {
+void PollingSwitch::initInput() {
     _lastState = readState();
 }
 
@@ -35,12 +34,11 @@ void PollingSwitch::pollInput() {
 }
 
 Switch2Pos::Switch2Pos(const char* message, uint8_t pin, int debounceTime) : PollingSwitch(message) {
-    Switch2Pos(message, new DirectInputPin(pin, debounceTime));
+    _inputPin = new DirectInputPin(pin, debounceTime);
 }
 
 Switch2Pos::Switch2Pos(const char* message, InputPin* inputPin) : PollingSwitch(message) {
     _inputPin = inputPin;
-    init();
 }
 
 uint8_t Switch2Pos::readState() {
@@ -48,13 +46,13 @@ uint8_t Switch2Pos::readState() {
 }
 
 Switch3Pos::Switch3Pos(const char* message, uint8_t pinA, uint8_t pinB, int debounceTime) : PollingSwitch(message) {
-    Switch3Pos(message, new DirectInputPin(pinA, debounceTime), new DirectInputPin(pinB, debounceTime));
+    _inputPinA = new DirectInputPin(pinA, debounceTime);
+    _inputPinB = new DirectInputPin(pinB, debounceTime);
 }
 
 Switch3Pos::Switch3Pos(const char* message, InputPin* inputPinA, InputPin* inputPinB) : PollingSwitch(message) {
     _inputPinA = inputPinA;
     _inputPinB = inputPinB;
-    init();
 }
 
 uint8_t Switch3Pos::readState() {
@@ -64,22 +62,21 @@ uint8_t Switch3Pos::readState() {
 }
 
 SwitchMultiPos::SwitchMultiPos(const char* message, const uint8_t* pins, uint8_t numberOfPins, int debounceTime) : PollingSwitch(message) {
-    DirectInputPin* inputPins = new DirectInputPin[numberOfPins];
+    _inputPins = (InputPin**)malloc(numberOfPins*sizeof(InputPin*));
     for(uint8_t i=0; i<numberOfPins; i++) {
-        inputPins[i].setPin(pins[i], debounceTime);
+        _inputPins[i] = new DirectInputPin(pins[i], debounceTime);
     }
-    SwitchMultiPos(message, inputPins, numberOfPins);
+    _numberOfPins = numberOfPins;
 }
 
-SwitchMultiPos::SwitchMultiPos(const char* message, InputPin* inputPins, uint8_t numberOfPins) : PollingSwitch(message) {
+SwitchMultiPos::SwitchMultiPos(const char* message, InputPin** inputPins, uint8_t numberOfPins) : PollingSwitch(message) {
     _inputPins = inputPins;
     _numberOfPins = numberOfPins;
-    init();
 }
 
 uint8_t SwitchMultiPos::readState() {
     for (uint8_t i=0; i<_numberOfPins; i++) {
-        if (_inputPins[i].readState() == LOW) return i;
+        if (_inputPins[i]->readState() == LOW) return i;
     }
-    return 0;
+    return _lastState;
 }

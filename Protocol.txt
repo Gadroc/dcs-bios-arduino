@@ -1,42 +1,51 @@
 Protocol Overview
-The bus is setup as a single master / many slave configuration.  Slave devices are only allowed to reply to packets specifically addressed to them.
+-----------------
+The DCS-BIOS bus is setup as a single master / many slave configuration.  Slave devices are only allowed to reply to packets specifically addressed to them.
 
 Computer Interface
-DCSBios bus is interfaced to the computer by a Bus Controller.  This controller speaks through a half duplex serial protocol at 250kbps and acts as the master for the bus.  This bus controller takes care of polling across all devices on the bus and interfacing with the PC.  The controller hardware must have at least two high speed UARTS capable of 250kbps and one of those UARTs must be able to be interfaced with the PC. (Ex: ArduinoMega or Leonardo).
+------------------
+DCS-BIOS bus is interfaced to the computer by a Bus Controller.  This controller speaks through a half duplex serial protocol at 250kbps and acts as the master for the bus.  This bus controller takes care of polling across all devices on the bus and interfacing with the PC.  The controller hardware must have at least two high speed UARTS capable of 250kbps and one of those UARTs must be able to be interfaced with the PC. (Ex: ArduinoMega or Leonardo).
 
 Electrical Signaling
+--------------------
 Signalling is up to the cockpit designer, but the protocol is designed around a multi-drop master/slave bus.  Half-Duplex RS-485 at 250kbps is the reference signal specification.
 
 Addressing
+----------
 Each bus can handle 32 (Addresses 0-31) polled devices which can supply input to the PC.  Each address will be polled roughly 3 times per second.  In addition as many listen only devices can be added up to the limits of your signaling chipset selection.  Listen only devices would read the data inside the polling update packets and display the information in their appropriate format. (Example many cockpit flight instruments do not have any input.  They can be implemented as listen only devices.)  Master device does not have an address as all response packet are directed at it.
 
 Packet Categories
-Request - These are packets from the master directed at an addressed slave which require a response.  The host controller will wait for 5ms for a response before moving on.  Requests can only be transmitted by the master device.
+-----------------
+Request - These are packets from the master directed at an addressed slave which require a response.  The host controller will wait for 2ms for a response before moving on.  Requests can only be transmitted by the master device.
 Response - Response to a request.  These can only be transmitted by a slave device and only when they have received a request addressed to them.
 
-
 Packet Types
+------------
 ID - Category - Name - Description
-0 - Request - Polling Update(Bank 0) - A polling request for messages from a device containing bank 0 data.
-1 - Request - Polling Update(Bank 1) - A polling request for messages from a device containing bank 1 data.
-2 - Request - Polling Update(Bank 2) - A polling request for messages from a device containing bank 2 data.
-3 - Request - Polling Update(Bank 3) - A polling request for messages from a device containing bank 3 data.
-4 - Response - Polling Response - Returns any messages this devices has queued up since it's last poll.
-5 - Request - Config Data - Sends config request to slave device.
-6 - Response - Config Response - Response packet to config request.
+0 - Request - Polling Request - A polling request for a device.
+1 - Response - Polling Response - Returns any messages this devices has queued up since it's last poll.
+2 - Request - Config Request - Sends config request to slave device.
+3 - Response - Config Response - Response packet to config request.
+4-7 Reserved for future use
 
-All data in Polling Update requests are broadcast. Polling Updates should be inspected by all devices on the bus for any applicable data for display, but should only respond with a Polling Response if it was addressed to them.
+All data in Polling Requests are broadcast. Polling Requests should be inspected by all devices on the bus for any applicable data for display, but should only respond with a Polling Response if it was addressed to them.
 
 Note: When the Bus Controller has no new update data it will send polling requests of type 0 with a data size of 0.
 
 Packet Structure
+----------------
 Byte 0 = Address / Command Bits
  Bit 7-5 = Packet Type
  Bit 4-0 = Request Target Address or Response Source Address
-Byte 1 = DataBank / Data Length (0-64)
-Byte 2-X = Packet Data
-Byte X+1 = CheckSum (simple rollover checksum)
+Byte 1 = Data Size
+Byte 2-X = Packet Data (Export stream in Polling Request, or Config data structure in Config Request)
 
-PC Interface Protocol
-Update simulation data to the bus.
-Send 98 followed by 131 bytes of data filling the 4 banks (0-3) of the controller.
+PC to Bus Controller Protocol
+-----------------------------
+Command: Status ('s') - Relay status of Bus Controller
+'r' - Ready for data from the PC.  PC can send data (either export stream or config)
+'t' - Transmitting export / config information to device. PC can not send data.
+
+Command: Export Stream ('e') - Add data to export stream.
+
+Command: Config Device ('c') - Send configuration request.

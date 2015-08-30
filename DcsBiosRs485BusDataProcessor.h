@@ -16,19 +16,12 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_BUSDATAPRCOCESSOR_H_
+#define _DCSBIOS_BUSDATAPRCOCESSOR_H_
 
-#include "DcsBiosSerialDevice.h"
-#include "DcsBiosRs485Device.h"
-#include "DcsBiosRs485Controller.h"
-#include "DirectInputPin.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogInput.h"
-#include "DirectAnalogOutput.h"
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+class DcsBiosRs485BusDataProcessor {
+public:
+    virtual void processPacketData(uint8_t data) = 0;
+};
 
 #endif

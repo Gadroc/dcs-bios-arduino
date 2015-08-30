@@ -35,7 +35,7 @@ public:
 	DirectInputPin(uint8_t pin, uint8_t debounceTime = 10);
 	void setPin(uint8_t pin, uint8_t debounceTime = 10);
 
-	uint8_t readState();
+	virtual uint8_t readState();
 };
 
 inline DirectInputPin::DirectInputPin() {}

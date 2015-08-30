@@ -21,17 +21,19 @@
 
 #include <Arduino.h>
 #include "Input.h"
-#include "DcsBiosCommon.h"
 
 class PollingInput : public Input {
 private:
     PollingInput* _nextPollingInput;
-    virtual void pollInput() = 0;
 
 public:
     PollingInput(const char* message);
+
+    virtual void initInput() {};
+    virtual void pollInput() = 0;
     
     static PollingInput* firstPollingInput;    
+    static void initInputs();
     static void pollInputs();
 };
 

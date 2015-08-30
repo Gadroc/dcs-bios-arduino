@@ -20,34 +20,33 @@
 #include "DirectOutputPin.h"
 #include "DirectAnalogOutput.h"
 
-Led::Led(uint8_t address, uint8_t mask, uint8_t pin) {
-    Led(address, mask, new DirectOutputPin(pin));
+Led::Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin) : IntegerListener(address, mask, shift) {
+    _pin = new DirectOutputPin(pin);
 }
 
-Led::Led(uint8_t address, uint8_t mask, OutputPin* pin) {    
-    _address = address;
-    _mask = mask;
+Led::Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin* pin) : IntegerListener(address, mask, shift) {
     _pin = pin;
 }
 
-void Led::onBufferReady(uint8_t *buffer) {
-    if (buffer[_address] & _mask) {
+void Led::onDcsBiosFrameSync() {
+    if (data) {
         _pin->set();
     } else {
         _pin->clear();
     }
 }
 
-DimmableLed::DimmableLed(uint8_t address, uint8_t pin) {
-    DimmableLed(address, new DirectAnalogOutput(pin));
+DimmableLed::DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin) : IntegerListener(address, mask, shift) {
+    _output = new DirectAnalogOutput(pin);
+    _output->write(0);
 }
 
-DimmableLed::DimmableLed(uint8_t address, AnalogOutput* output) {
+DimmableLed::DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput* output) : IntegerListener(address, mask, shift) {
     _output = output;
     _output->write(0);
 }
 
-void DimmableLed::onBufferReady(uint8_t *buffer) {
-    unsigned int value = (buffer[_address]) << 8 | buffer[_address+1];
-    _output->write(map(value, 0, 65535, 0, _output->maxValue()));
+void DimmableLed::onDcsBiosFrameSync() {
+    unsigned int value = map(data, 0, 65535, 0, _output->maxValue()); 
+    _output->write(value);
 }

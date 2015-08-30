@@ -1,5 +1,5 @@
 /*
-	Copyright 2015 Craig Courtney
+    Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,35 +16,33 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_LEDS_H_
-#define _DCSBIOS_LEDS_H_
+#ifndef _DCSBIOS_BUSDEVICERS485_H_
+#define _DCSBIOS_BUSDEVICERS485_H_
 
 #include <Arduino.h>
-#include "OutputPin.h"
-#include "AnalogOutput.h"
-#include "IntegerListener.h"
+#include "ExportStreamParser.h"
+#include "DcsBiosRs485Parser.h"
+#include "DirectOutputPin.h"
 
-
-class Led : public IntegerListener {
+class DcsBiosRs485Device {
 private:
-	OutputPin* _pin;
+    Stream* _busStream;
+    DcsBiosRs485Parser _bus;
+    ExportStreamParser _parser;
+    DirectOutputPin _busTxPin;    
+    uint8_t _address;
+
+    void sendPollResponse();
+    void addPollingResponseString(const char* string);
+
+    static uint8_t pollingResponseBuffer[DCSBIOS_MAX_PACKET_DATA_SIZE];
+    static uint8_t pollingResponseBufferSize;
 
 public:
-	Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
-    Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin* pin);
+    void begin(Stream *busStream, int txPin, uint8_t address);
+    void sendDcsBiosMessage(const char* message, const char* arg);
 
-    virtual void onDcsBiosFrameSync();    
-};
-
-class DimmableLed : public IntegerListener {
-private:
-    AnalogOutput* _output;
-
-public:
-    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
-    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput* output);
-
-    virtual void onDcsBiosFrameSync();    
+    void process();
 };
 
 #endif

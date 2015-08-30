@@ -1,0 +1,62 @@
+/*
+    Copyright 2015 Craig Courtney
+
+    This file is part of DcsBios-Firmware.
+
+    DcsBios-Firmware is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    DcsBios-Firmware is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
+*/
+#ifndef _DCSBIOS_BUSCONTROLLERS485_H_
+#define _DCSBIOS_BUSCONTROLLERS485_H_
+
+#include <Arduino.h>
+#include "DcsBiosRs485Parser.h"
+#include "DirectOutputPin.h"
+
+#define DCSBIOS_RS485_PC_BUFFER_SIZE 255
+#define DCSBIOS_RS485_DEVICE_RESPONSE_TIMEOUT 2
+
+class DcsBiosRs485Controller {
+private:
+    Stream* _busStream;
+    DcsBiosRs485Parser _bus;
+    DirectOutputPin _busTxPin;
+    uint8_t _busBufferSize;
+    uint8_t _busBuffer[DCSBIOS_MAX_PACKET_DATA_SIZE];
+    bool _busWaitingResponse;
+    uint8_t _busPollingAddress;
+    unsigned long _busPollingTimeout;    
+
+    Stream* _pcStream;
+    uint8_t _pcBufferSize;
+    uint8_t _pcBufferTxIndex;
+    uint8_t _pcBufferLoadIndex;
+    uint8_t _pcBuffer[DCSBIOS_RS485_PC_BUFFER_SIZE];
+    uint8_t _pcCommandState;
+    unsigned long _pcCommandTimeout;
+
+    void processBusInput();
+    void sendPollingPacket();
+    void processBusPacket();    
+
+    void processPcInput();
+    void parseCommand(uint8_t in);
+    void parseExportDataSize(uint8_t in);
+    void parseExportData(uint8_t in);
+
+public:
+    void begin(Stream* busStream, int txPin, Stream* pcStream);
+    void process();
+};
+
+#endif

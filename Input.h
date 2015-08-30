@@ -20,20 +20,15 @@
 #define _DCSBIOS_INPUT_H_
 
 #include <Arduino.h>
-#include "DcsBiosCommon.h"
+
+void sendDcsBiosMessage(const char* msg, const char* args);
 
 class Input {
 private:
     const char* _message;
 
-    static uint8_t getStringLength(const char* message);
-    static void addString(const char* message);    
-
 public:
     Input(const char* message);
-
-    static uint8_t CommandBuffer[DCSBIOS_BUS_BUFFER_SIZE];
-    static uint8_t CommandBufferSize;
 
     void sendMessage(int attribute);
     void sendMessage(const char* arg);

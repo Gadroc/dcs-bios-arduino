@@ -20,6 +20,14 @@
 
 PollingInput* PollingInput::firstPollingInput;
 
+void PollingInput::initInputs() {
+    PollingInput* bl = firstPollingInput;
+    while (bl) {
+        bl->initInput();
+        bl = bl->_nextPollingInput;
+    }
+}
+
 void PollingInput::pollInputs() {
     PollingInput* bl = firstPollingInput;
     while (bl) {

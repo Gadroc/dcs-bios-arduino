@@ -20,20 +20,23 @@
 #define _DCSBIOS_POTENTIOMETERS_H_
 
 #include <Arduino.h>
-#include "ReadInput.h"
 #include "AnalogInput.h"
+#include "PollingInput.h"
 
-class Potentiometer : public ReadInput {
+class Potentiometer : public PollingInput {
 private:
     AnalogInput* _input;
-    int _threshold;
+    unsigned int _threshold;
     unsigned int _lastState;
-
-    virtual void readInput();
+    unsigned long _nextPoll;
+    unsigned int _pollingInterval;
 
 public:
-    Potentiometer(const char* message, uint8_t pin, int threshold = 50);
-    Potentiometer(const char* message, AnalogInput* input, int threshold = 50);
+    Potentiometer(const char* message, uint8_t pin, unsigned int threshold = 50, unsigned int pollingInterval = 100);
+    Potentiometer(const char* message, AnalogInput* input, unsigned int threshold = 50, unsigned int pollingInterval = 100);
+
+    virtual void initInput();
+    virtual void pollInput();
 };
 
 #endif

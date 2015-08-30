@@ -20,7 +20,7 @@
 #define _DCSBIOS_DIRECTANALOGINPUT_H_
 
 #include <Arduino.h>
-#include <AnalogInput.h>
+#include "AnalogInput.h"
 
 // Helper class to do highspeed analog input on the arduino.
 // Built in routines are slow due to significant saftey 

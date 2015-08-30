@@ -26,7 +26,10 @@ ActionButton::ActionButton(const char* message, const char* arg, uint8_t pin, in
 ActionButton::ActionButton(const char* message, const char* arg, InputPin* pin) : PollingInput(message) {
     _arg = arg;
     _pin = pin;
-    _lastState = pin->readState();
+}
+
+void ActionButton::initInput() {
+    _lastState = _pin->readState();
 }
 
 void ActionButton::pollInput() {

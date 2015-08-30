@@ -28,6 +28,7 @@ private:
     const char* _arg;
     InputPin* _pin;
     uint8_t _lastState;
+    virtual void initInput();
     virtual void pollInput();
 
 public:
