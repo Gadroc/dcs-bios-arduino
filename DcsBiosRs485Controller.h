@@ -36,7 +36,7 @@
 class DcsBiosRs485Controller {
 private:
     Stream* _busStream;
-    DcsBiosRs485Parser _bus;
+    DcsBiosRs485BusParser _bus;
     DirectOutputPin _busTxPin;
     uint8_t _busBufferSize;
     uint8_t _busBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];

@@ -27,7 +27,7 @@
 class DcsBiosRs485Device {
 private:
     Stream* _busStream;
-    DcsBiosRs485Parser _bus;
+    DcsBiosRs485BusParser _bus;
     ExportStreamParser _parser;
     DirectOutputPin _busTxPin;    
     uint8_t _address;
