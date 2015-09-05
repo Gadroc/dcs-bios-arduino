@@ -41,17 +41,17 @@ public:
     StringListener(unsigned int address) {
         _address = address;
         _endAddress = address+LENGTH;
-        memset(buffer, '\0', LENGTH+1);
+        memset(_buffer, '\0', LENGTH+1);
         _dirty = false;
     }
 
     virtual void onDcsBiosWrite(unsigned int address, unsigned int value) {
         if ((address >= _address) && (_endAddress > address)) {
             unsigned int index = address - _address;
-            buffer[index] = ((char*)&value)[0];
+            _buffer[index] = ((char*)&value)[0];
             index++;
             if (LENGTH > index) {
-                buffer[index] = ((char*)&value)[1];
+                _buffer[index] = ((char*)&value)[1];
             }
             // No need to compare existing buffer with current value.  We never get to this
             // point unless the sim has sent a change.
