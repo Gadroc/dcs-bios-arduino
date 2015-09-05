@@ -26,6 +26,6 @@ IntegerListener::IntegerListener(unsigned int address, unsigned int mask, uint8_
 
 void IntegerListener::onDcsBiosWrite(unsigned int address, unsigned int value) {
     if (address == _address) {
-        data = (value & _mask) >> _shift;
+        _data = (value & _mask) >> _shift;
     }
 }

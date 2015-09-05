@@ -27,13 +27,16 @@ private:
     unsigned int _address;
     unsigned int _mask;
     uint8_t _shift;
-
-protected:
-    unsigned int data;
+    unsigned int _data;
 
 public:
     IntegerListener(unsigned int address, unsigned int mask, uint8_t shift);
-    virtual void onDcsBiosWrite(unsigned int address, unsigned int value);    
+    virtual void onDcsBiosWrite(unsigned int address, unsigned int value);
+    unsigned int getData();
 };
+
+inline unsigned int IntegerListener::getData() {
+    return _data;
+}
 
 #endif

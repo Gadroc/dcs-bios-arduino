@@ -29,7 +29,7 @@ Led::Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin* pin)
 }
 
 void Led::onDcsBiosFrameSync() {
-    if (data) {
+    if (getData()) {
         _pin->set();
     } else {
         _pin->clear();
@@ -47,6 +47,6 @@ DimmableLed::DimmableLed(unsigned int address, unsigned int mask, uint8_t shift,
 }
 
 void DimmableLed::onDcsBiosFrameSync() {
-    unsigned int value = map(data, 0, 65535, 0, _output->maxValue()); 
+    unsigned int value = map(getData(), 0, 65535, 0, _output->maxValue()); 
     _output->write(value);
 }

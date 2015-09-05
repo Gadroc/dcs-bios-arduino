@@ -25,7 +25,11 @@ void DcsBiosSerialDevice::begin(Stream *serial) {
 }
 
 void DcsBiosSerialDevice::process() {
-  _parser.processByte(_serial->read());
+  int in = _serial->read();
+  while(in > -1) {
+    _parser.processByte(in);    
+    in = _serial->read();
+  }
 }
 
 void DcsBiosSerialDevice::sendDcsBiosMessage(const char* msg, const char* arg) {

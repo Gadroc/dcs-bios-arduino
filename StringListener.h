@@ -27,9 +27,9 @@ private:
     unsigned int _address;
     unsigned int _endAddress;
     bool _dirty;
+    char _buffer[LENGTH+1];   
 
 protected:
-    char buffer[LENGTH+1];   
     bool isDirty() {
         return _dirty;
     }
@@ -57,6 +57,10 @@ public:
             // point unless the sim has sent a change.
             _dirty = true;
         }    
+    }
+
+    char* getString() {
+        return _buffer;
     }
 };
 
