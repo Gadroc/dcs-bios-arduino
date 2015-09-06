@@ -11,7 +11,7 @@ This is an alternative to the official DCS-BIOS arduino library.  The primary fe
 * Wraps more IO leaving cleaners sketches
 
 ## Example Sketch
-```
+```c++
 #include <DcsBios.h>
 
 /* Instantiate a device object to parse the DCS-BIOS export stream */
@@ -81,13 +81,13 @@ The PC Interface layer handles interaction with the PC.  Every sketch will inter
 
 Usage of this layer consists of three parts to your sketches. First is defining your PC Interface object, typicall right after the includes at the top of the sketch.
 
-```
+```c++
 DcsBiosSerialDevice dcsBiosDevice(&Serial);
 ```
 
 Second you must call the process() method during each loop in your primary loop.
 
-```
+```c++
 void loop() {
 	dcsBiosDevice.process();
 }
@@ -95,7 +95,7 @@ void loop() {
 
 Use the interface object to send messages back to DCS.
 
-```
+```c++
 void sendDcsBiosMessage(const char* msg, const char* arg) {
   dcsBiosDevice.sendDcsBiosMessage(msg, arg);
 }
@@ -104,7 +104,7 @@ void sendDcsBiosMessage(const char* msg, const char* arg) {
 #### DcsBiosSerialDevice
 This object implements the direct serial protocol.  This protocol is a direct retransmission of the data contained with in the UDP packets from DCS-BIOS.  This is the default protcol used by the original DCS-BIOS arduino library.  Sketches using DcsBiosSerialDevice interface directly with the PC via an RS-232 serial port.
 ##### Initialization
-```
+```c++
 DcsBiosSerialDevice dcsBiosDevice(&Serial);
 ```
 Define an object of DcsBiosSerialDevice and pass it the address of the serial port stream it should use to talke to the PC.  Be sure to initialize the Serial port to the right baud rate in your setup() method.
@@ -112,7 +112,7 @@ Define an object of DcsBiosSerialDevice and pass it the address of the serial po
 #### DcsBiosRs485Device
 This object implements the RS-485 half-duplex protocol for control boards.  Sketches using DcsBiosRs485Device will talk to a DcsBiosRs485Controller, which will in trun communicate with the PC.
 ##### Initialization
-```
+```c++
 DcsBiosRs485Device dcsBiosDevice(&Serial, 8, 0);
 ```
 Define an object of DcsBiosRs485Device passing in the address of the serial port to talk to the controller through, the IO pin connnected to the transmit pin on your RS-485 controller and the address of this device on the bus (must be unique on the bus, but two different buses can use the same ids).  Be sure to initialize the Serial port to the right baud rate in your setup() method.
@@ -149,22 +149,24 @@ Request - These are packets from the master directed at an addressed slave which
 Response - Response to a request.  These can only be transmitted by a slave device and only when they have received a request addressed to them.
 
 ### Packet Types
-ID - Category - Name - Description
-0 - Request - Polling Request - A polling request for a device.
-1 - Response - Polling Response - Returns any messages this devices has queued up since it's last poll.
-2 - Request - Config Request - Sends config request to slave device.
-3 - Response - Config Response - Response packet to config request.
-4-7 Reserved for future use
+ID | Category | Name | Description
+--- | --- | --- | ---
+0 | Request | Polling Request | A polling request for a device.
+1 | Response | Polling Response | Returns any messages this devices has queued up since it's last poll.
+2 | Request | Config Request | Sends config request to slave device.
+3 | Response | Config Response | Response packet to config request.
+4-7 | | | Reserved for future use
 
 All data in Polling Requests are broadcast. Polling Requests should be inspected by all devices on the bus for any applicable data for display, but should only respond with a Polling Response if it was addressed to them.
 
 Note: When the Bus Controller has no new update data it will send polling requests of type 0 with a data size of 0.
 
 ### Packet Structure
-Byte 0 = Address / Command Bits
- Bit 7-5 = Packet Type
- Bit 4-0 = Request Target Address or Response Source Address
-Byte 1 = Data Size
-Byte 2-X = Packet Data (Export stream in Polling Request, or Config data structure in Config Request)
+Byte | Bit | Decription
+--- | --- | ---
+0 | 7-5 | Packet Type
+0 | 4-0 | Request Target Address or Response Source Address
+1 | 7-0 | Data Size
+2-X | | Packet Data (Export stream in Polling Request, or Config data structure in Config Request)
 
 ### PC to Bus Controller Protocol
