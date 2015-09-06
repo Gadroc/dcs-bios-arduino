@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,25 +16,15 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
-
-#include "DcsBiosSerialDevice.h"
-#include "DcsBiosRs485Device.h"
-#include "DcsBiosRs485Controller.h"
-
-#include "DirectInputPin.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogInput.h"
-#include "DirectAnalogOutput.h"
-
-#include "DirectStepperDriver.h"
-#include "AcceleratedStepperOutput.h"
-
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
 #include "Steppers.h"
 
-#endif
+Stepper::Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput* stepperOutput) : IntegerListener(address, mask, shift) {
+    _minPosition = minPosition;
+    _maxPosition = maxPosition;
+    _maxValue = 65535>>shift;
+    _output = stepperOutput;
+}
+
+void Stepper::onDcsBiosFrameSync() {
+    _output->setTargetPosition(map(getData(), 0, _maxValue, _minPosition, _maxPosition));
+}

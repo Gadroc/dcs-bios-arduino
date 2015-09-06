@@ -16,25 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_DCSDEVICE_H_
+#define _DCSBIOS_DCSDEVICE_H_
 
-#include "DcsBiosSerialDevice.h"
-#include "DcsBiosRs485Device.h"
-#include "DcsBiosRs485Controller.h"
+#include <Arduino.h>
+#include "ExportStreamParser.h"
 
-#include "DirectInputPin.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogInput.h"
-#include "DirectAnalogOutput.h"
+class DcsBiosDevice {
+protected:
+    ExportStreamParser _parser;
 
-#include "DirectStepperDriver.h"
-#include "AcceleratedStepperOutput.h"
-
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
-#include "Steppers.h"
+public:
+    virtual void sendDcsBiosMessage(const char* msg, const char* arg) = 0;
+    virtual void process() = 0;
+};
 
 #endif

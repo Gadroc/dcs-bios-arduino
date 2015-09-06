@@ -10,9 +10,15 @@
 #define BUS_ADDRESS 0
 
 /* Instantiate a device object to parse the DCS-BIOS export stream */
-DcsBiosRs485Device dcsBiosDevice;
+// Tell DCS-BIOS which serial port to communicate on, 
+// what pin to use for enabling transmitting on the RS-485 bus
+// and what address we respond to for input polling.  This address must be unique
+// for every device on the RS-485 device.
+DcsBiosRs485Device dcsBiosDevice(&BUS_SERIAL, BUS_TX_PIN, BUS_ADDRESS);
+
 /* Declare a Master Caution Reset button on pin 10 */
 Switch2Pos masterCautionButton("UFC_MASTER_CAUTION", 10);
+
 /* Make the LED connected to pin 13 into a Master Caution Light */
 Led masterCautionLed(0x1012, 0x0800, 11, 13);
 
@@ -23,11 +29,6 @@ Led masterCautionLed(0x1012, 0x0800, 11, 13);
 void setup() {
   // Initialize the serial port to 250000 baud.
   BUS_SERIAL.begin(250000);
-  // Tell DCS-BIOS which serial port to communicate on, 
-  // what pin to use for enabling transmitting on the RS-485 bus
-  // and what address we respond to for input polling.  This address must be unique
-  // for every device on the RS-485 device.
-  dcsBiosDevice.begin(&BUS_SERIAL, BUS_TX_PIN, BUS_ADDRESS);
   // Initialize all of your polling inputs.
   PollingInput::initInputs();  
 }

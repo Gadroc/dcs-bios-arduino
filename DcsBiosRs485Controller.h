@@ -54,7 +54,7 @@ private:
     void processPcInput();
 
 public:
-    void begin(Stream* busStream, int txPin, Stream* pcStream);
+    DcsBiosRs485Controller(Stream* busStream, int txPin, Stream* pcStream);
     void process();
 };
 

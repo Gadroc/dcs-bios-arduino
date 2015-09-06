@@ -20,15 +20,14 @@
 #define _DCSBIOS_BUSDEVICERS485_H_
 
 #include <Arduino.h>
-#include "ExportStreamParser.h"
+#include "DcsBiosDevice.h"
 #include "DcsBiosRs485BusParser.h"
 #include "DirectOutputPin.h"
 
-class DcsBiosRs485Device {
+class DcsBiosRs485Device : public DcsBiosDevice {
 private:
     Stream* _busStream;
     DcsBiosRs485BusParser _bus;
-    ExportStreamParser _parser;
     DirectOutputPin _busTxPin;    
     uint8_t _address;
 
@@ -39,10 +38,10 @@ private:
     static uint8_t pollingResponseBufferSize;
 
 public:
-    void begin(Stream *busStream, int txPin, uint8_t address);
-    void sendDcsBiosMessage(const char* message, const char* arg);
+    DcsBiosRs485Device(Stream *busStream, int txPin, uint8_t address);
 
-    void process();
+    virtual void sendDcsBiosMessage(const char* message, const char* arg);
+    virtual void process();
 };
 
 #endif

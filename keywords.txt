@@ -8,7 +8,10 @@ Switch2Pos	KEYWORD1
 Switch3Pos	KEYWORD1
 SwitchMultiPos KEYWORD1
 Potentiometer	KEYWORD1
+Stepper	KEYWORD1
 DirectInputPin	KEYWORD1
 DirectOutputPin	KEYWORD1
 DirectAnalogInput	KEYWORD1
 DirectAnalogOutput	KEYWORD1
+DirectStepperDriver KEYWORD1
+AcceleratedStepperOutput KEYWORD1

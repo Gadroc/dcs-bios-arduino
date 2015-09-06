@@ -18,9 +18,7 @@
 */
 #include "DcsBiosSerialDevice.h"
 
-DcsBiosSerialDevice::DcsBiosSerialDevice() {}
-
-void DcsBiosSerialDevice::begin(Stream *serial) {
+DcsBiosSerialDevice::DcsBiosSerialDevice(Stream *serial) {
   _serial = serial;
 }
 

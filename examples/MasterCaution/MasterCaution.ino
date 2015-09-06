@@ -1,9 +1,11 @@
 #include <DcsBios.h>
 
 /* Instantiate a device object to parse the DCS-BIOS export stream */
-DcsBiosSerialDevice dcsBiosDevice;
+DcsBiosSerialDevice dcsBiosDevice(&Serial);
+
 /* Declare a Master Caution Reset button on pin 10 */
 Switch2Pos masterCautionButton("UFC_MASTER_CAUTION", 10);
+
 /* Make the LED connected to pin 13 into a Master Caution Light */
 Led masterCautionLed(0x1012, 0x0800, 11, 13);
 
@@ -14,8 +16,7 @@ Led masterCautionLed(0x1012, 0x0800, 11, 13);
 void setup() {
   // Initialize the serial port to 250000 baud.
   Serial.begin(250000);
-  // Tell DCS-BIOS which serial port to communicate on.
-  dcsBiosDevice.begin(&Serial);
+
   // Initialize all of your polling inputs.
   PollingInput::initInputs();  
 }
@@ -26,6 +27,7 @@ void setup() {
 void loop() {
   // Process any incoming data.
   dcsBiosDevice.process();
+  
   // Check our inputs and record messages for DCS-BIOS
   PollingInput::pollInputs();
 }

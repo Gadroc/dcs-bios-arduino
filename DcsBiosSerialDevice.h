@@ -20,18 +20,17 @@
 #define _DCSBIOS_DCSSERIALDEVICE_H_
 
 #include <Arduino.h>
+#include "DcsBiosDevice.h"
 #include "ExportStreamParser.h"
 
-class DcsBiosSerialDevice {
+class DcsBiosSerialDevice : public DcsBiosDevice {
 private:
-    ExportStreamParser _parser;
     Stream* _serial;
 
 public:
-    DcsBiosSerialDevice();
-    void begin(Stream *serial);
-    void sendDcsBiosMessage(const char* msg, const char* arg);
+    DcsBiosSerialDevice(Stream *serial);
 
+    virtual void sendDcsBiosMessage(const char* msg, const char* arg);
     virtual void process();
 };
 

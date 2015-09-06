@@ -18,7 +18,7 @@
 */
 #include "DcsBiosRs485Controller.h"
 
-void DcsBiosRs485Controller::begin(Stream* busStream, int txPin, Stream* pcStream) {
+DcsBiosRs485Controller::DcsBiosRs485Controller(Stream* busStream, int txPin, Stream* pcStream) {
     _busStream = busStream;
     _busTxPin.setPin(txPin);
     _busTxPin.clear();
