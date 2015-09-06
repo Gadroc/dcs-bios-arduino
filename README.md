@@ -11,7 +11,8 @@ This is an alternative to the official DCS-BIOS arduino library.  The primary fe
 * Wraps more IO leaving cleaners sketches
 
 ## Sketch Overview
-```#include <DcsBios.h>
+```
+#include <DcsBios.h>
 
 /* Instantiate a device object to parse the DCS-BIOS export stream */
 DcsBiosSerialDevice dcsBiosDevice(&Serial);
@@ -69,7 +70,8 @@ void onDcsBiosFrameSync() {
  */
 void sendDcsBiosMessage(const char* msg, const char* arg) {
   dcsBiosDevice.sendDcsBiosMessage(msg, arg);
-}```
+}
+```
 
 ## Library Overview
 This library is broken down into four layers - PC Interface, Control Interface, DCS-BIOS Interface and IO Abstraction.  Most sketches will only use PC Interface and Control Interface objects.
