@@ -20,6 +20,11 @@
 
 PollingInput* PollingInput::firstPollingInput;
 
+PollingInput::PollingInput(const char* message) : Input(message) {
+    this->_nextPollingInput = firstPollingInput;
+    firstPollingInput = this;
+}
+
 void PollingInput::initInputs() {
     PollingInput* bl = firstPollingInput;
     while (bl) {

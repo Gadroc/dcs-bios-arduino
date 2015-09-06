@@ -43,8 +43,6 @@ public:
     virtual int read();
 };
 
-inline DirectAnalogInput::DirectAnalogInput() {}
-
 inline int DirectAnalogInput::maxValue() { return 1023; }
 
 #endif

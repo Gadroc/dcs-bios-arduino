@@ -22,8 +22,6 @@
 
 extern void onDcsBiosFrameSync();
 
-ExportStreamListener* ExportStreamListener::firstExportStreamListener = NULL;
-
 ExportStreamParser::ExportStreamParser() {
     _state = DCSBIOS_STATE_WAIT_FOR_SYNC;
     _sync_byte_count = 0;

@@ -28,7 +28,7 @@ private:
 	uint8_t _bitMask;					// Bit mask of pin in register
 	volatile uint8_t *_inputRegister;   // Read register for pin
 
-	static void turnOffPWM(uint8_t timer);
+	void turnOffPWM(uint8_t timer);
 
 public:
 	DirectInputPin();
@@ -37,8 +37,6 @@ public:
 
 	virtual uint8_t readState();
 };
-
-inline DirectInputPin::DirectInputPin() {}
 
 inline uint8_t DirectInputPin::readState()
 {

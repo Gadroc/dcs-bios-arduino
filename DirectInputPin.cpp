@@ -22,6 +22,12 @@
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 
+DirectInputPin::DirectInputPin() {}
+
+DirectInputPin::DirectInputPin(uint8_t pin, uint8_t debounceTime) {
+	setPin(pin, debounceTime);
+}
+
 void DirectInputPin::turnOffPWM(uint8_t timer)
 {
 	switch (timer)
@@ -80,10 +86,6 @@ void DirectInputPin::turnOffPWM(uint8_t timer)
 		case  TIMER5C:  cbi(TCCR5A, COM5C1);    break;
 		#endif
 	}
-}
-
-DirectInputPin::DirectInputPin(uint8_t pin, uint8_t debounceTime) {
-	setPin(pin, debounceTime);
 }
 
 void DirectInputPin::setPin(uint8_t pin, uint8_t debounceTime) 

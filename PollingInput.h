@@ -37,9 +37,4 @@ public:
     static void pollInputs();
 };
 
-inline PollingInput::PollingInput(const char* message) : Input(message) {
-    this->_nextPollingInput = firstPollingInput;
-    firstPollingInput = this;
-}
-
 #endif

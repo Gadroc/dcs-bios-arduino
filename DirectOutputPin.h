@@ -32,7 +32,7 @@ class DirectOutputPin : public OutputPin
 private:		
 	uint8_t _bitMask;					// Bit mask of pin in register
 	volatile uint8_t *_outputRegister;	// Write register for pin
-	static void turnOffPWM(uint8_t timer);
+	void turnOffPWM(uint8_t timer);
 
 public:
 	DirectOutputPin();
@@ -40,35 +40,8 @@ public:
 
 	void setPin(uint8_t pin);
 
-	void clear();	
-	void set();
-	void setState(bool state);
+	virtual void clear();	
+	virtual void set();
 };
-
-inline DirectOutputPin::DirectOutputPin() {}
-
-inline void DirectOutputPin::clear()
-{
-	uint8_t oldSREG = SREG;
-	cli();
-	 *_outputRegister &= ~_bitMask; 
- 	SREG = oldSREG;		
-}
-
-inline void DirectOutputPin::set()
-{
-	uint8_t oldSREG = SREG;
-	cli();
-	*_outputRegister |= _bitMask;
- 	SREG = oldSREG;		
-}
-
-inline void DirectOutputPin::setState(bool state) {
-    if (state) {
-        set();
-    } else {
-        clear();
-    }
-}
 
 #endif

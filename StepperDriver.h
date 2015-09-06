@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,24 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_STEPPERDRIVER_H_
+#define _DCSBIOS_STEPPERDRIVER_H_
 
-#include "DcsBiosSerialDevice.h"
-#include "DcsBiosRs485Device.h"
-#include "DcsBiosRs485Controller.h"
+class StepperDriver {
+public:
+    // Enables the stepper motor
+    virtual void enable() = 0;
 
-#include "DirectInputPin.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogInput.h"
-#include "DirectAnalogOutput.h"
+    // Disables the stepper motor
+    virtual void disable() = 0;
 
-#include "DirectStepperDriver.h"
-#include "AcceleratedStepperOutput.h"
+    // Sets the direction to step. (1 CW/Forward, -1 CCW/Backward)
+    virtual void setDirection(int8_t dir) = 0;
 
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+    // Steps the motor in the current direction
+    virtual void step() = 0;
+};
 
 #endif

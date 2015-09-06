@@ -18,7 +18,25 @@
 */
 #include "ExportStreamListener.h"
 
+ExportStreamListener* ExportStreamListener::firstExportStreamListener = NULL;
+
 ExportStreamListener::ExportStreamListener() {
     this->nextExportStreamListener = firstExportStreamListener;
     firstExportStreamListener = this;
+}
+
+void ExportStreamListener::handleDcsBiosWrite(unsigned int address, unsigned int value) {
+    ExportStreamListener* el = firstExportStreamListener;
+    while (el) {
+        el->onDcsBiosWrite(address, value);
+        el = el->nextExportStreamListener;
+    }
+}
+
+void ExportStreamListener::handleDcsBiosFrameSync() {
+    ExportStreamListener* el = firstExportStreamListener;
+    while (el) {
+        el->onDcsBiosFrameSync();
+        el = el->nextExportStreamListener;
+    }
 }

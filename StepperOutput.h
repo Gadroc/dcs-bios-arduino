@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,24 +16,30 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#ifndef _DCSBIOS_STEPPEROUTPUT_H_
+#define _DCSBIOS_STEPPEROUTPUT_H_
 
-#include "DcsBiosSerialDevice.h"
-#include "DcsBiosRs485Device.h"
-#include "DcsBiosRs485Controller.h"
+#include <Arduino.h>
 
-#include "DirectInputPin.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogInput.h"
-#include "DirectAnalogOutput.h"
+// StepperOutput classes generate pulse trains from absolute position indicators.
+class StepperOutput {
+private:
+    StepperOutput* nextStepperOutput;
 
-#include "DirectStepperDriver.h"
-#include "AcceleratedStepperOutput.h"
+public:
+    static StepperOutput* firstStepperOutput;
+    static void runSteppers();
+    
+    StepperOutput();
 
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
+    // Check to see if pulse needs to be generated and do so if necessary
+    virtual void run() = 0;
+
+    // Sets a new target step position
+    virtual void setTargetPosition(long newPosition) = 0;
+
+    // Sets the current step position of the motor
+    virtual void setCurrentPosition(long currentPosition) = 0;
+};
 
 #endif

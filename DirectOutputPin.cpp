@@ -22,6 +22,12 @@
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 
+DirectOutputPin::DirectOutputPin() {}
+
+DirectOutputPin::DirectOutputPin(uint8_t pin) {
+	setPin(pin);
+}
+
 void DirectOutputPin::turnOffPWM(uint8_t timer)
 {
 	switch (timer)
@@ -82,11 +88,6 @@ void DirectOutputPin::turnOffPWM(uint8_t timer)
 	}
 }
 
-
-DirectOutputPin::DirectOutputPin(uint8_t pin) {
-	setPin(pin);
-}
-
 void DirectOutputPin::setPin(uint8_t pin) 
 {
 	uint8_t port = digitalPinToPort(pin);
@@ -105,4 +106,20 @@ void DirectOutputPin::setPin(uint8_t pin)
 
 	uint8_t timer = digitalPinToTimer(pin);
 	if (timer != NOT_ON_TIMER) turnOffPWM(timer);
+}
+
+void DirectOutputPin::clear()
+{
+	uint8_t oldSREG = SREG;
+	cli();
+	 *_outputRegister &= ~_bitMask; 
+ 	SREG = oldSREG;		
+}
+
+void DirectOutputPin::set()
+{
+	uint8_t oldSREG = SREG;
+	cli();
+	*_outputRegister |= _bitMask;
+ 	SREG = oldSREG;		
 }

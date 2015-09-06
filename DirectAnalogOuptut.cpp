@@ -25,6 +25,8 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
     
+DirectAnalogOutput::DirectAnalogOutput() {}
+    
 DirectAnalogOutput::DirectAnalogOutput(uint8_t pin) {
 	setPin(pin);
 }

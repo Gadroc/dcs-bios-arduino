@@ -26,6 +26,15 @@ class OutputPin {
 public:    
     virtual void set() = 0;
     virtual void clear() = 0;
+    void setState(bool state);
 };
+
+inline void OutputPin::setState(bool state) {
+    if (state) {
+        set();
+    } else {
+        clear();
+    }
+}
 
 #endif

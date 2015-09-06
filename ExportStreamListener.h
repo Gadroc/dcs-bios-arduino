@@ -36,20 +36,4 @@ public:
     virtual void onDcsBiosFrameSync() {}
 };
 
-inline void ExportStreamListener::handleDcsBiosWrite(unsigned int address, unsigned int value) {
-    ExportStreamListener* el = firstExportStreamListener;
-    while (el) {
-        el->onDcsBiosWrite(address, value);
-        el = el->nextExportStreamListener;
-    }
-}
-
-inline void ExportStreamListener::handleDcsBiosFrameSync() {
-    ExportStreamListener* el = firstExportStreamListener;
-    while (el) {
-        el->onDcsBiosFrameSync();
-        el = el->nextExportStreamListener;
-    }
-}
-
 #endif

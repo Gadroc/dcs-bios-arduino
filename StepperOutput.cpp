@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,24 +16,19 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
+#include "StepperOutput.h"
 
-#include "DcsBiosSerialDevice.h"
-#include "DcsBiosRs485Device.h"
-#include "DcsBiosRs485Controller.h"
+StepperOutput* StepperOutput::firstStepperOutput = NULL;
 
-#include "DirectInputPin.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogInput.h"
-#include "DirectAnalogOutput.h"
+StepperOutput::StepperOutput() {
+    this->nextStepperOutput = firstStepperOutput;
+    firstStepperOutput = this;
+}
 
-#include "DirectStepperDriver.h"
-#include "AcceleratedStepperOutput.h"
-
-#include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
-
-#endif
+void StepperOutput::runSteppers() {
+    StepperOutput* el = firstStepperOutput;
+    while (el) {
+        el->run();
+        el = el->nextStepperOutput;
+    }
+}

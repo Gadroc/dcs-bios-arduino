@@ -47,8 +47,6 @@ public:
 	virtual void write(unsigned int value);
 };
 
-inline DirectAnalogOutput::DirectAnalogOutput() {}
-
 inline unsigned int DirectAnalogOutput::maxValue() { return 255; }
 
 #endif
