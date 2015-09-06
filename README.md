@@ -10,7 +10,7 @@ This is an alternative to the official DCS-BIOS arduino library.  The primary fe
 * Support half-duplex polling protocol (RS-485)
 * Wraps more IO leaving cleaners sketches
 
-## Sketch Overview
+## Example Sketch
 ```
 #include <DcsBios.h>
 
@@ -80,28 +80,41 @@ This library is broken down into four layers - PC Interface, Control Interface, 
 The PC Interface layer handles interaction with the PC.  Every sketch will interact with this layer.  This layer consistes of three objects.
 
 Usage of this layer consists of three parts to your sketches. First is defining your PC Interface object, typicall right after the includes at the top of the sketch.
-```DcsBiosSerialDevice dcsBiosDevice(&Serial);```
+
+```
+DcsBiosSerialDevice dcsBiosDevice(&Serial);
+```
 
 Second you must call the process() method during each loop in your primary loop.
-```void loop() {
+
+```
+void loop() {
 	dcsBiosDevice.process();
-}```
+}
+```
 
 Use the interface object to send messages back to DCS.
-```void sendDcsBiosMessage(const char* msg, const char* arg) {
+
+```
+void sendDcsBiosMessage(const char* msg, const char* arg) {
   dcsBiosDevice.sendDcsBiosMessage(msg, arg);
-}```
+}
+```
 
 #### DcsBiosSerialDevice
 This object implements the direct serial protocol.  This protocol is a direct retransmission of the data contained with in the UDP packets from DCS-BIOS.  This is the default protcol used by the original DCS-BIOS arduino library.  Sketches using DcsBiosSerialDevice interface directly with the PC via an RS-232 serial port.
 ##### Initialization
-```DcsBiosSerialDevice dcsBiosDevice(&Serial);```
+```
+DcsBiosSerialDevice dcsBiosDevice(&Serial);
+```
 Define an object of DcsBiosSerialDevice and pass it the address of the serial port stream it should use to talke to the PC.  Be sure to initialize the Serial port to the right baud rate in your setup() method.
 
 #### DcsBiosRs485Device
 This object implements the RS-485 half-duplex protocol for control boards.  Sketches using DcsBiosRs485Device will talk to a DcsBiosRs485Controller, which will in trun communicate with the PC.
 ##### Initialization
-```DcsBiosRs485Device dcsBiosDevice(&Serial, 8, 0);```
+```
+DcsBiosRs485Device dcsBiosDevice(&Serial, 8, 0);
+```
 Define an object of DcsBiosRs485Device passing in the address of the serial port to talk to the controller through, the IO pin connnected to the transmit pin on your RS-485 controller and the address of this device on the bus (must be unique on the bus, but two different buses can use the same ids).  Be sure to initialize the Serial port to the right baud rate in your setup() method.
 
 #### DcsBiosRS485Controller
@@ -116,7 +129,8 @@ The control interface layer mappes the I/O pins of your arduino to DCS-BIOS.   T
 ### DCS-BIOS Interface
 The DCS-BIOS layer handles extracting and sending information into DCS-BIOS.
 
-### 
+### IO Abstraction
+The IO Abstraction layer is a set of interfaces that can be used to implement IO Expanders.
 
 ## RS-485 Protocol
 The DCS-BIOS bus is setup as a single master / many slave configuration.  Slave devices are only allowed to reply to packets specifically addressed to them.
