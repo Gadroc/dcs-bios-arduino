@@ -76,7 +76,7 @@ void sendDcsBiosMessage(const char* msg, const char* arg) {
 ## Library Overview
 This library is broken down into four layers - PC Interface, Control Interface, DCS-BIOS Interface and IO Abstraction.  Most sketches will only use PC Interface and Control Interface objects.
 
-### PC Interface
+#### PC Interface
 The PC Interface layer handles interaction with the PC.  Every sketch will interact with this layer.  This layer consistes of three objects.
 
 Usage of this layer consists of three parts to your sketches. First is defining your PC Interface object, typicall right after the includes at the top of the sketch.
@@ -101,54 +101,54 @@ void sendDcsBiosMessage(const char* msg, const char* arg) {
 }
 ```
 
-#### DcsBiosSerialDevice
+##### DcsBiosSerialDevice
 This object implements the direct serial protocol.  This protocol is a direct retransmission of the data contained with in the UDP packets from DCS-BIOS.  This is the default protcol used by the original DCS-BIOS arduino library.  Sketches using DcsBiosSerialDevice interface directly with the PC via an RS-232 serial port.
-##### Initialization
+###### Initialization
 ```c++
 DcsBiosSerialDevice dcsBiosDevice(&Serial);
 ```
 Define an object of DcsBiosSerialDevice and pass it the address of the serial port stream it should use to talke to the PC.  Be sure to initialize the Serial port to the right baud rate in your setup() method.
 
-#### DcsBiosRs485Device
+##### DcsBiosRs485Device
 This object implements the RS-485 half-duplex protocol for control boards.  Sketches using DcsBiosRs485Device will talk to a DcsBiosRs485Controller, which will in trun communicate with the PC.
-##### Initialization
+###### Initialization
 ```c++
 DcsBiosRs485Device dcsBiosDevice(&Serial, 8, 0);
 ```
 Define an object of DcsBiosRs485Device passing in the address of the serial port to talk to the controller through, the IO pin connnected to the transmit pin on your RS-485 controller and the address of this device on the bus (must be unique on the bus, but two different buses can use the same ids).  Be sure to initialize the Serial port to the right baud rate in your setup() method.
 
-#### DcsBiosRS485Controller
+##### DcsBiosRS485Controller
 This object manages communication with the PC and communicating with up to 32 DcsBiosRs485Device based sketches.  See the example sketch for an implementation of the controller.
 
-#### DcsBiosDevice
+##### DcsBiosDevice
 This is a base object/interface that all new protocols for talking with the PC should implement.  All DcsBiosDevices must implement two methods process and sendDcsBiosMessage.  This will allow existing sketches to be converted easily.
 
-### Control Interface
+#### Control Interface
 The control interface layer mappes the I/O pins of your arduino to DCS-BIOS.   This is the primary layer you will use when creating your sketches.
 
-### DCS-BIOS Interface
+#### DCS-BIOS Interface
 The DCS-BIOS layer handles extracting and sending information into DCS-BIOS.
 
-### IO Abstraction
+#### IO Abstraction
 The IO Abstraction layer is a set of interfaces that can be used to implement IO Expanders.
 
 ## RS-485 Protocol
 The DCS-BIOS bus is setup as a single master / many slave configuration.  Slave devices are only allowed to reply to packets specifically addressed to them.
 
-### Computer Interface
+#### Computer Interface
 DCS-BIOS bus is interfaced to the computer by a Bus Controller.  This controller speaks through a half duplex serial protocol at 250kbps and acts as the master for the bus.  This bus controller takes care of polling across all devices on the bus and interfacing with the PC.  The controller hardware must have at least two high speed UARTS capable of 250kbps and one of those UARTs must be able to be interfaced with the PC. (Ex: ArduinoMega or Leonardo).
 
-### Electrical Signaling
+#### Electrical Signaling
 Signalling is up to the cockpit designer, but the protocol is designed around a multi-drop master/slave bus.  Half-Duplex RS-485 at 250kbps is the reference signal specification.
 
-### Addressing
+#### Addressing
 Each bus can handle 32 (Addresses 0-31) polled devices which can supply input to the PC.  Each address will be polled roughly 3 times per second.  In addition as many listen only devices can be added up to the limits of your signaling chipset selection.  Listen only devices would read the data inside the polling update packets and display the information in their appropriate format. (Example many cockpit flight instruments do not have any input.  They can be implemented as listen only devices.)  Master device does not have an address as all response packet are directed at it.
 
-### Packet Categories
+#### Packet Categories
 Request - These are packets from the master directed at an addressed slave which require a response.  The host controller will wait for 2ms for a response before moving on.  Requests can only be transmitted by the master device.
 Response - Response to a request.  These can only be transmitted by a slave device and only when they have received a request addressed to them.
 
-### Packet Types
+#### Packet Types
 ID | Category | Name | Description
 --- | --- | --- | ---
 0 | Request | Polling Request | A polling request for a device.
@@ -161,7 +161,7 @@ All data in Polling Requests are broadcast. Polling Requests should be inspected
 
 Note: When the Bus Controller has no new update data it will send polling requests of type 0 with a data size of 0.
 
-### Packet Structure
+#### Packet Structure
 Byte | Bit | Decription
 --- | --- | ---
 0 | 7-5 | Packet Type
@@ -169,4 +169,4 @@ Byte | Bit | Decription
 1 | 7-0 | Data Size
 2-X | | Packet Data (Export stream in Polling Request, or Config data structure in Config Request)
 
-### PC to Bus Controller Protocol
+#### PC to Bus Controller Protocol
