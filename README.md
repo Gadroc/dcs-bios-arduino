@@ -79,28 +79,6 @@ This library is broken down into four layers - PC Interface, Control Interface, 
 #### PC Interface
 The PC Interface layer handles interaction with the PC.  Every sketch will interact with this layer.  This layer consistes of three objects.
 
-Usage of this layer consists of three parts to your sketches. First is defining your PC Interface object, typicall right after the includes at the top of the sketch.
-
-```c++
-DcsBiosSerialDevice dcsBiosDevice(&Serial);
-```
-
-Second you must call the process() method during each loop in your primary loop.
-
-```c++
-void loop() {
-	dcsBiosDevice.process();
-}
-```
-
-Use the interface object to send messages back to DCS.
-
-```c++
-void sendDcsBiosMessage(const char* msg, const char* arg) {
-  dcsBiosDevice.sendDcsBiosMessage(msg, arg);
-}
-```
-
 #### Control Interface
 The control interface layer mappes the I/O pins of your arduino to DCS-BIOS.   This is the primary layer you will use when creating your sketches.
 
