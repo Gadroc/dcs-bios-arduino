@@ -101,28 +101,6 @@ void sendDcsBiosMessage(const char* msg, const char* arg) {
 }
 ```
 
-##### DcsBiosSerialDevice
-This object implements the direct serial protocol.  This protocol is a direct retransmission of the data contained with in the UDP packets from DCS-BIOS.  This is the default protcol used by the original DCS-BIOS arduino library.  Sketches using DcsBiosSerialDevice interface directly with the PC via an RS-232 serial port.
-###### Initialization
-```c++
-DcsBiosSerialDevice dcsBiosDevice(&Serial);
-```
-Define an object of DcsBiosSerialDevice and pass it the address of the serial port stream it should use to talke to the PC.  Be sure to initialize the Serial port to the right baud rate in your setup() method.
-
-##### DcsBiosRs485Device
-This object implements the RS-485 half-duplex protocol for control boards.  Sketches using DcsBiosRs485Device will talk to a DcsBiosRs485Controller, which will in trun communicate with the PC.
-###### Initialization
-```c++
-DcsBiosRs485Device dcsBiosDevice(&Serial, 8, 0);
-```
-Define an object of DcsBiosRs485Device passing in the address of the serial port to talk to the controller through, the IO pin connnected to the transmit pin on your RS-485 controller and the address of this device on the bus (must be unique on the bus, but two different buses can use the same ids).  Be sure to initialize the Serial port to the right baud rate in your setup() method.
-
-##### DcsBiosRS485Controller
-This object manages communication with the PC and communicating with up to 32 DcsBiosRs485Device based sketches.  See the example sketch for an implementation of the controller.
-
-##### DcsBiosDevice
-This is a base object/interface that all new protocols for talking with the PC should implement.  All DcsBiosDevices must implement two methods process and sendDcsBiosMessage.  This will allow existing sketches to be converted easily.
-
 #### Control Interface
 The control interface layer mappes the I/O pins of your arduino to DCS-BIOS.   This is the primary layer you will use when creating your sketches.
 
