@@ -21,14 +21,14 @@
 
 #include <Arduino.h>
 
-void sendDcsBiosMessage(const char* msg, const char* args);
+void sendDcsBiosMessage(const char msg[], const char args[]);
 
 class Input {
 private:
     const char* _message;
 
 public:
-    Input(const char* message);
+    Input(const char message[]);
 
     void sendMessage(int attribute);
     void sendMessage(const char* arg);

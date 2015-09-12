@@ -21,15 +21,14 @@
 uint8_t DcsBiosRs485Device::pollingResponseBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];
 uint8_t DcsBiosRs485Device::pollingResponseBufferSize;
 
-DcsBiosRs485Device::DcsBiosRs485Device(Stream* busStream, int txPin, uint8_t address) {
-    _busStream = busStream;
+DcsBiosRs485Device::DcsBiosRs485Device(Stream& busStream, int txPin, uint8_t address) : _busStream(busStream) {
     _busTxPin.setPin(txPin);
     _busTxPin.clear();
     _address = address;
 }
 
 void DcsBiosRs485Device::process() {
-    int in = _busStream->read();
+    int in = _busStream.read();
     do {
         _bus.processByte(in);
 
@@ -43,7 +42,7 @@ void DcsBiosRs485Device::process() {
             _parser.processByte(_bus.getPacketDataByte());
         }
 
-        in = _busStream->read();
+        in = _busStream.read();
     } while (in > -1);
 }
 
@@ -51,12 +50,12 @@ void DcsBiosRs485Device::sendPollResponse() {
     delayMicroseconds(10);
     _busTxPin.set();
     _bus.sendPacket(_busStream, DCSBIOS_RS485_PACKETYPE_POLLING_RESPONSE, _address, pollingResponseBuffer, pollingResponseBufferSize);
-    _busStream->flush();
+    _busStream.flush();
     _busTxPin.clear();
     pollingResponseBufferSize = 0;
 }
 
-void DcsBiosRs485Device::addPollingResponseString(const char* string) {
+void DcsBiosRs485Device::addPollingResponseString(const char string[]) {
     uint8_t i = 0;
     uint8_t data = string[i++];
     while(data > 0) {
@@ -65,7 +64,7 @@ void DcsBiosRs485Device::addPollingResponseString(const char* string) {
     }
 }
 
-void DcsBiosRs485Device::sendDcsBiosMessage(const char* message, const char* arg) {
+void DcsBiosRs485Device::sendDcsBiosMessage(const char message[], const char arg[]) {
     uint8_t totalSize = sizeof(message) + sizeof(arg) + 2;
     if (pollingResponseBufferSize + totalSize < DCSBIOS_RS485_MAX_PACKET_DATA_SIZE) {
         addPollingResponseString(message);

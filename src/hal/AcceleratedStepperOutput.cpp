@@ -18,15 +18,8 @@
 */
 #include "AcceleratedStepperOutput.h"
 
-AcceleratedStepperOutput::AcceleratedStepperOutput() {}
-
-AcceleratedStepperOutput::AcceleratedStepperOutput(StepperDriver* driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency) {
-    init(driver, stepsPerRevolution, microsteps, acceleration, maxSpeed, frequency);
-}
-
-void AcceleratedStepperOutput::init(StepperDriver* driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency) {
+AcceleratedStepperOutput::AcceleratedStepperOutput(StepperDriver& driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency) : _driver(driver) {
     _frequency = frequency;
-    _driver = driver;
     _stepsPerRevolution = stepsPerRevolution * microsteps;    
     _acceleration = acceleration;
     _maxSpeed = maxSpeed;
@@ -68,7 +61,7 @@ void AcceleratedStepperOutput::planMove(long distance) {
 
             // Set drivers to step in the right direction
             _currentDirection = targetDirection;
-            _driver->setDirection(_currentDirection);
+            _driver.setDirection(_currentDirection);
 
             if (distance == 1) {
                 // When distance is only step construct the scenario appropiatley
@@ -89,7 +82,7 @@ void AcceleratedStepperOutput::planMove(long distance) {
                     _lastStepDelay = _initialStepDelay;
                     _runState = ACCEL;
                 }
-                _driver->enable();
+                _driver.enable();
             }
             _nextStepTime = micros();
         }
@@ -142,7 +135,7 @@ void AcceleratedStepperOutput::setCurrentPosition(long currentPosition) {
 unsigned int AcceleratedStepperOutput::step() {
     unsigned int newStepDelay;
 
-    _driver->step();
+    _driver.step();
     _currentPosition += _currentDirection;
     long distance = _targetPosition - _currentPosition;
 

@@ -20,33 +20,29 @@
 #include "hal/DirectOutputPin.h"
 #include "hal/DirectAnalogOutput.h"
 
-Led::Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin) : IntegerListener(address, mask, shift) {
-    _pin = new DirectOutputPin(pin);
+Led::Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin) : IntegerListener(address, mask, shift), _pin(*(new DirectOutputPin(pin))) {
 }
 
-Led::Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin* pin) : IntegerListener(address, mask, shift) {
-    _pin = pin;
+Led::Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin& pin) : IntegerListener(address, mask, shift), _pin(pin) {
 }
 
 void Led::onDcsBiosFrameSync() {
     if (getData()) {
-        _pin->set();
+        _pin.set();
     } else {
-        _pin->clear();
+        _pin.clear();
     }
 }
 
-DimmableLed::DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin) : IntegerListener(address, mask, shift) {
-    _output = new DirectAnalogOutput(pin);
-    _output->write(0);
+DimmableLed::DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin) : IntegerListener(address, mask, shift), _output(*(new DirectAnalogOutput(pin))) {
+    _output.write(0);
 }
 
-DimmableLed::DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput* output) : IntegerListener(address, mask, shift) {
-    _output = output;
-    _output->write(0);
+DimmableLed::DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput& output) : IntegerListener(address, mask, shift), _output(output) {
+    _output.write(0);
 }
 
 void DimmableLed::onDcsBiosFrameSync() {
-    unsigned int value = map(getData(), 0, 65535, 0, _output->maxValue()); 
-    _output->write(value);
+    unsigned int value = map(getData(), 0, 65535, 0, _output.maxValue()); 
+    _output.write(value);
 }

@@ -25,13 +25,13 @@
 
 class Stepper : IntegerListener {
 private:
-    StepperOutput* _output;
+    StepperOutput& _output;
     unsigned int _maxValue;
     long _minPosition;
     long _maxPosition;
 
 public:
-    Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput* stepperOutput);
+    Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput& stepperOutput);
 
     virtual void onDcsBiosFrameSync();
 };

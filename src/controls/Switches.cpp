@@ -19,7 +19,7 @@
 #include "Switches.h"
 #include "hal/DirectInputPin.h"
 
-PollingSwitch::PollingSwitch(const char* message) : PollingInput(message) {}
+PollingSwitch::PollingSwitch(const char message[]) : PollingInput(message) {}
 
 void PollingSwitch::initInput() {
     _lastState = readState();
@@ -33,50 +33,45 @@ void PollingSwitch::pollInput() {
     }
 }
 
-Switch2Pos::Switch2Pos(const char* message, uint8_t pin, int debounceTime) : PollingSwitch(message) {
-    _inputPin = new DirectInputPin(pin, debounceTime);
+Switch2Pos::Switch2Pos(const char message[], uint8_t pin, int debounceTime) : PollingSwitch(message), _inputPin(*(new DirectInputPin(pin, debounceTime))) {
 }
 
-Switch2Pos::Switch2Pos(const char* message, InputPin* inputPin) : PollingSwitch(message) {
-    _inputPin = inputPin;
+Switch2Pos::Switch2Pos(const char message[], InputPin& inputPin) : PollingSwitch(message), _inputPin(inputPin) {
 }
 
 uint8_t Switch2Pos::readState() {
-    return _inputPin->readState() == HIGH ? 0 : 1;
+    return _inputPin.readState() == HIGH ? 0 : 1;
 }
 
-Switch3Pos::Switch3Pos(const char* message, uint8_t pinA, uint8_t pinB, int debounceTime) : PollingSwitch(message) {
-    _inputPinA = new DirectInputPin(pinA, debounceTime);
-    _inputPinB = new DirectInputPin(pinB, debounceTime);
+Switch3Pos::Switch3Pos(const char message[], uint8_t pinA, uint8_t pinB, int debounceTime) : PollingSwitch(message), _inputPinA(*(new DirectInputPin(pinA, debounceTime))), _inputPinB(*(new DirectInputPin(pinB, debounceTime))) {
 }
 
-Switch3Pos::Switch3Pos(const char* message, InputPin* inputPinA, InputPin* inputPinB) : PollingSwitch(message) {
-    _inputPinA = inputPinA;
-    _inputPinB = inputPinB;
+Switch3Pos::Switch3Pos(const char message[], InputPin& inputPinA, InputPin& inputPinB) : PollingSwitch(message), _inputPinA(inputPinA), _inputPinB(inputPinB) {
 }
 
 uint8_t Switch3Pos::readState() {
-    if (_inputPinA->readState() == LOW) return 0;
-    if (_inputPinB->readState() == LOW) return 2;
+    if (_inputPinA.readState() == LOW) return 0;
+    if (_inputPinB.readState() == LOW) return 2;
     return 1;
 }
 
-SwitchMultiPos::SwitchMultiPos(const char* message, const uint8_t* pins, uint8_t numberOfPins, int debounceTime) : PollingSwitch(message) {
-    _inputPins = (InputPin**)malloc(numberOfPins*sizeof(InputPin*));
+SwitchMultiPos::SwitchMultiPos(const char message[], const uint8_t pins[], uint8_t numberOfPins, int debounceTime) : PollingSwitch(message) {
+    DirectInputPin* inputPins = new DirectInputPin[numberOfPins];
     for(uint8_t i=0; i<numberOfPins; i++) {
-        _inputPins[i] = new DirectInputPin(pins[i], debounceTime);
+        inputPins[i].setPin(numberOfPins, debounceTime);
     }
+    _inputPins = inputPins;
     _numberOfPins = numberOfPins;
 }
 
-SwitchMultiPos::SwitchMultiPos(const char* message, InputPin** inputPins, uint8_t numberOfPins) : PollingSwitch(message) {
+SwitchMultiPos::SwitchMultiPos(const char message[], InputPin* inputPins, uint8_t numberOfPins) : PollingSwitch(message) {
     _inputPins = inputPins;
     _numberOfPins = numberOfPins;
 }
 
 uint8_t SwitchMultiPos::readState() {
     for (uint8_t i=0; i<_numberOfPins; i++) {
-        if (_inputPins[i]->readState() == LOW) return i;
+        if (_inputPins[i].readState() == LOW) return i;
     }
     return _lastState;
 }

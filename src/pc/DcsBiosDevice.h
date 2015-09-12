@@ -27,7 +27,7 @@ protected:
     ExportStreamParser _parser;
 
 public:
-    virtual void sendDcsBiosMessage(const char* msg, const char* arg) = 0;
+    virtual void sendDcsBiosMessage(const char msg[], const char arg[]) = 0;
     virtual void process() = 0;
 };
 

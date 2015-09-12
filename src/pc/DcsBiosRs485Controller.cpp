@@ -18,8 +18,7 @@
 */
 #include "DcsBiosRs485Controller.h"
 
-DcsBiosRs485Controller::DcsBiosRs485Controller(Stream* busStream, int txPin, Stream* pcStream) {
-    _busStream = busStream;
+DcsBiosRs485Controller::DcsBiosRs485Controller(Stream& busStream, int txPin, Stream* pcStream) : _busStream(busStream) {
     _busTxPin.setPin(txPin);
     _busTxPin.clear();
     _busBufferSize = 0;
@@ -52,7 +51,7 @@ void DcsBiosRs485Controller::sendPollingPacket() {
     } else {
         _bus.sendPacket(_busStream, DCSBIOS_RS485_PACKETYPE_POLLING_REQUEST, _busPollingAddress);        
     }
-    _busStream->flush();
+    _busStream.flush();
     _busTxPin.clear();
 
     _busPollingAddress++;
@@ -66,7 +65,7 @@ void DcsBiosRs485Controller::sendPollingPacket() {
 }
 
 void DcsBiosRs485Controller::processBusInput() {
-    int in = _busStream->read();
+    int in = _busStream.read();
 
     do {
         _bus.processByte(in);
@@ -88,7 +87,7 @@ void DcsBiosRs485Controller::processBusInput() {
                 break;
         }
 
-        in = _busStream->read();
+        in = _busStream.read();
     } while (in > -1);
 }
 

@@ -64,7 +64,7 @@ class DcsBiosRs485BusParser {
         bool hasPacketDataByte();
         uint8_t getPacketDataByte();
 
-        void sendPacket(Stream* stream, uint8_t packetType, uint8_t address, uint8_t* data = 0, uint8_t size = 0, uint8_t offset = 0);
+        void sendPacket(Stream& stream, uint8_t packetType, uint8_t address, uint8_t* data = 0, uint8_t size = 0, uint8_t offset = 0);
 
         void processByte(int in);
 };

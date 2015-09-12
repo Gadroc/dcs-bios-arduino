@@ -26,21 +26,21 @@
 
 class DcsBiosRs485Device : public DcsBiosDevice {
 private:
-    Stream* _busStream;
+    Stream& _busStream;
     DcsBiosRs485BusParser _bus;
     DirectOutputPin _busTxPin;    
     uint8_t _address;
 
     void sendPollResponse();
-    void addPollingResponseString(const char* string);
+    void addPollingResponseString(const char string[]);
 
     static uint8_t pollingResponseBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];
     static uint8_t pollingResponseBufferSize;
 
 public:
-    DcsBiosRs485Device(Stream *busStream, int txPin, uint8_t address);
+    DcsBiosRs485Device(Stream& busStream, int txPin, uint8_t address);
 
-    virtual void sendDcsBiosMessage(const char* message, const char* arg);
+    virtual void sendDcsBiosMessage(const char message[], const char arg[]);
     virtual void process();
 };
 

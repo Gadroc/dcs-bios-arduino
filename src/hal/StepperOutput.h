@@ -25,9 +25,9 @@
 class StepperOutput {
 private:
     StepperOutput* nextStepperOutput;
+    static StepperOutput* firstStepperOutput;
 
 public:
-    static StepperOutput* firstStepperOutput;
     static void runSteppers();
     
     StepperOutput();

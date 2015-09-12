@@ -18,13 +18,12 @@
 */
 #include "Steppers.h"
 
-Stepper::Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput* stepperOutput) : IntegerListener(address, mask, shift) {
+Stepper::Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput& stepperOutput) : IntegerListener(address, mask, shift), _output(stepperOutput) {
     _minPosition = minPosition;
     _maxPosition = maxPosition;
     _maxValue = 65535>>shift;
-    _output = stepperOutput;
 }
 
 void Stepper::onDcsBiosFrameSync() {
-    _output->setTargetPosition(map(getData(), 0, _maxValue, _minPosition, _maxPosition));
+    _output.setTargetPosition(map(getData(), 0, _maxValue, _minPosition, _maxPosition));
 }

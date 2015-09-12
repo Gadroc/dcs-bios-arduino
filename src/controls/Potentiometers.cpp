@@ -19,29 +19,27 @@
 #include "Potentiometers.h"
 #include "hal/DirectAnalogInput.h"
 
-Potentiometer::Potentiometer(const char* message, uint8_t pin, unsigned int threshold, unsigned int pollingInterval) : PollingInput(message) {
-    _input = new DirectAnalogInput(pin);
+Potentiometer::Potentiometer(const char message[], uint8_t pin, unsigned int threshold, unsigned int pollingInterval) : PollingInput(message), _input(*(new DirectAnalogInput(pin))) {
     _threshold = threshold;
     _pollingInterval = pollingInterval;
 }
 
-Potentiometer::Potentiometer(const char* message, AnalogInput* input, unsigned int threshold, unsigned int pollingInterval) : PollingInput(message) {
-    _input = input;
+Potentiometer::Potentiometer(const char message[], AnalogInput& input, unsigned int threshold, unsigned int pollingInterval) : PollingInput(message), _input(input) {
     _threshold = threshold;
     _pollingInterval = pollingInterval;
 }
 
 void Potentiometer::initInput() {
     _nextPoll = millis() + _pollingInterval;
-    _lastState = _input->read();
+    _lastState = _input.read();
 }
 
 void Potentiometer::pollInput() {
     unsigned long current = millis();
     if ((long)(current-_nextPoll) >= 0) {
-        unsigned int reading = _input->read();
+        unsigned int reading = _input.read();
         if (abs(reading-_lastState) > _threshold) {
-            sendMessage(map(reading, 0, _input->maxValue(), 0, 65535));
+            sendMessage(map(reading, 0, _input.maxValue(), 0, 65535));
             _lastState = reading;
         }
         _nextPoll = current + _pollingInterval;        

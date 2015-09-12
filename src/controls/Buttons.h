@@ -26,14 +26,14 @@
 class ActionButton : public PollingInput {
 private:
     const char* _arg;
-    InputPin* _pin;
+    InputPin& _pin;
     uint8_t _lastState;
     virtual void initInput();
     virtual void pollInput();
 
 public:
-    ActionButton(const char* message, const char* arg, uint8_t pin, int debounceTime = 10);
-    ActionButton(const char* message, const char* arg, InputPin* pin);
+    ActionButton(const char message[], const char arg[], uint8_t pin, int debounceTime = 10);
+    ActionButton(const char message[], const char arg[], InputPin& pin);
 };
 
 #endif

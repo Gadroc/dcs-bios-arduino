@@ -40,7 +40,7 @@ enum ACCEL_STEPPER_RUNSTATES {
 // Stepper output based which implements acceleration / deceleration.
 class AcceleratedStepperOutput : public StepperOutput {
 private:
-    StepperDriver* _driver;
+    StepperDriver& _driver;
 
     // Minimum distance before we start moving
     unsigned int _threshold;
@@ -103,19 +103,13 @@ private:
     void planMove(signed long distance);
 
 public:
-    // Full initializer, used when you can know all attributes at.
     // driver - Stepper driver used to control this stepper motor.
     // stepsPerRevolution - Native steps per revolution for the stepper motor (1.8 degeree stepper is 200)
     // microsteps - How many microsteps does the driver apply for this motor (1 = no microstepping)
     // acceleration - Acceleration/Deceleration rate for this motor in 0.01*rad/sec^2 (8 radion/sec^s would be 800)
     // maxSpeed - Maximum rotation speed for this motor in 0.01*rad/sec (6.28 radian/sec would be 628)
     // frequency - Step counter frequency.  Default is appropraite for poll based timing like the run function on this class.  Set appropriately if calling step function from a timer interrupt.
-    AcceleratedStepperOutput(StepperDriver* drvier, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency = 1000000L);
-
-    // Delayed initializer, used when you need to defer with dynamic data the creation of the stepper.  Do not call init again after
-    // begning to use the stepper or undefined behaviors will occur.
-    AcceleratedStepperOutput();
-    void init(StepperDriver* drvier, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency = 1000000L);
+    AcceleratedStepperOutput(StepperDriver& drvier, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency = 1000000L);
 
     // Checks time and steps the motor if necessary.  Must be called as frequent as possible
     virtual void run();

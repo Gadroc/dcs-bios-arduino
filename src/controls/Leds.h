@@ -27,22 +27,22 @@
 
 class Led : public IntegerListener {
 private:
-	OutputPin* _pin;
+	OutputPin& _pin;
 
 public:
 	Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
-    Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin* pin);
+    Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin& pin);
 
     virtual void onDcsBiosFrameSync();    
 };
 
 class DimmableLed : public IntegerListener {
 private:
-    AnalogOutput* _output;
+    AnalogOutput& _output;
 
 public:
     DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
-    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput* output);
+    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput& output);
 
     virtual void onDcsBiosFrameSync();    
 };

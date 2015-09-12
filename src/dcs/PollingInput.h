@@ -25,14 +25,14 @@
 class PollingInput : public Input {
 private:
     PollingInput* _nextPollingInput;
+    static PollingInput* firstPollingInput;    
 
 public:
-    PollingInput(const char* message);
+    PollingInput(const char message[]);
 
     virtual void initInput() {};
     virtual void pollInput() = 0;
     
-    static PollingInput* firstPollingInput;    
     static void initInputs();
     static void pollInputs();
 };

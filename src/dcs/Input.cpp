@@ -18,7 +18,7 @@
 */
 #include "Input.h"
 
-Input::Input(const char* message) {
+Input::Input(const char message[]) {
     _message = message;
 }
 
@@ -28,6 +28,6 @@ void Input::sendMessage(int attribute) {
     sendMessage(buf);
 }
 
-void Input::sendMessage(const char* arg) {
+void Input::sendMessage(const char arg[]) {
     sendDcsBiosMessage(_message, arg);
 }

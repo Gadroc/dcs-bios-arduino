@@ -24,9 +24,9 @@
 class ExportStreamListener {
 private:
     ExportStreamListener* nextExportStreamListener;
+    static ExportStreamListener* firstExportStreamListener;
 
 public:
-    static ExportStreamListener* firstExportStreamListener;
     static void handleDcsBiosWrite(unsigned int address, unsigned int value);
     static void handleDcsBiosFrameSync();
 
