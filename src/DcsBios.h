@@ -30,10 +30,13 @@
 #include "hal/DirectStepperDriver.h"
 #include "hal/AcceleratedStepperOutput.h"
 
-#include "controls/Buttons.h"
-#include "controls/Leds.h"
-#include "controls/Switches.h"
-#include "controls/Potentiometers.h"
-#include "controls/Steppers.h"
+#include "controls/ActionButton.h"
+#include "controls/Potentiometer.h"
+#include "controls/Switch2Pos.h"
+#include "controls/Switch3Pos.h"
+#include "controls/SwitchMultiPos.h"
+#include "controls/Led.h"
+#include "controls/DimmableLed.h"
+#include "controls/Stepper.h"
 
 #endif
