@@ -2,7 +2,7 @@
 #include <DcsBios.h>
 
 test(regularPacket) {
-  DcsBiosRs485Parser parser;
+  DcsBiosRs485BusParser parser;
   assertEqual(parser.getPacketState(), PACKET_START);
   assertFalse(parser.hasPacketDataByte());
   parser.processByte(0xbb);
@@ -31,7 +31,7 @@ test(regularPacket) {
 }
 
 test(zeroLengthPacket) {
-  DcsBiosRs485Parser parser;
+  DcsBiosRs485BusParser parser;
   assertEqual(parser.getPacketState(), PACKET_START);
   assertFalse(parser.hasPacketDataByte());
   parser.processByte(0xbb);
@@ -52,7 +52,7 @@ test(zeroLengthPacket) {
 }
 
 test(timeoutPacket) {
-  DcsBiosRs485Parser parser;
+  DcsBiosRs485BusParser parser;
   assertEqual(parser.getPacketState(), PACKET_START);
   assertFalse(parser.hasPacketDataByte());
   parser.processByte(0xbb);
@@ -68,7 +68,7 @@ test(timeoutPacket) {
 }
 
 test(backToBack) {
-  DcsBiosRs485Parser parser;
+  DcsBiosRs485BusParser parser;
   assertEqual(parser.getPacketState(), PACKET_START);
   assertFalse(parser.hasPacketDataByte());
   parser.processByte(0xbb);
