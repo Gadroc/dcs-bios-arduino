@@ -1,5 +1,5 @@
 /*
-	Copyright 2015 Craig Courtney
+    Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,35 +16,22 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_LEDS_H_
-#define _DCSBIOS_LEDS_H_
+#ifndef _DCSBIOS_DCSSERIALDEVICE_H_
+#define _DCSBIOS_DCSSERIALDEVICE_H_
 
 #include <Arduino.h>
-#include "OutputPin.h"
-#include "AnalogOutput.h"
-#include "IntegerListener.h"
+#include "DcsBiosDevice.h"
+#include "dcs/ExportStreamParser.h"
 
-
-class Led : public IntegerListener {
+class DcsBiosSerialDevice : public DcsBiosDevice {
 private:
-	OutputPin* _pin;
+    Stream* _serial;
 
 public:
-	Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
-    Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin* pin);
+    DcsBiosSerialDevice(Stream *serial);
 
-    virtual void onDcsBiosFrameSync();    
-};
-
-class DimmableLed : public IntegerListener {
-private:
-    AnalogOutput* _output;
-
-public:
-    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
-    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput* output);
-
-    virtual void onDcsBiosFrameSync();    
+    virtual void sendDcsBiosMessage(const char* msg, const char* arg);
+    virtual void process();
 };
 
 #endif

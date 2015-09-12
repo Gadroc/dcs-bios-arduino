@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,22 +16,27 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_DCSSERIALDEVICE_H_
-#define _DCSBIOS_DCSSERIALDEVICE_H_
+#ifndef _DCSBIOS_POTENTIOMETERS_H_
+#define _DCSBIOS_POTENTIOMETERS_H_
 
 #include <Arduino.h>
-#include "DcsBiosDevice.h"
-#include "ExportStreamParser.h"
+#include "hal/AnalogInput.h"
+#include "dcs/PollingInput.h"
 
-class DcsBiosSerialDevice : public DcsBiosDevice {
+class Potentiometer : public PollingInput {
 private:
-    Stream* _serial;
+    AnalogInput* _input;
+    unsigned int _threshold;
+    unsigned int _lastState;
+    unsigned long _nextPoll;
+    unsigned int _pollingInterval;
 
 public:
-    DcsBiosSerialDevice(Stream *serial);
+    Potentiometer(const char* message, uint8_t pin, unsigned int threshold = 50, unsigned int pollingInterval = 100);
+    Potentiometer(const char* message, AnalogInput* input, unsigned int threshold = 50, unsigned int pollingInterval = 100);
 
-    virtual void sendDcsBiosMessage(const char* msg, const char* arg);
-    virtual void process();
+    virtual void initInput();
+    virtual void pollInput();
 };
 
 #endif

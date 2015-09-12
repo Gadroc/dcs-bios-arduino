@@ -16,27 +16,35 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_POTENTIOMETERS_H_
-#define _DCSBIOS_POTENTIOMETERS_H_
+#ifndef _DCSBIOS_LEDS_H_
+#define _DCSBIOS_LEDS_H_
 
 #include <Arduino.h>
-#include "AnalogInput.h"
-#include "PollingInput.h"
+#include "hal/OutputPin.h"
+#include "hal/AnalogOutput.h"
+#include "dcs/IntegerListener.h"
 
-class Potentiometer : public PollingInput {
+
+class Led : public IntegerListener {
 private:
-    AnalogInput* _input;
-    unsigned int _threshold;
-    unsigned int _lastState;
-    unsigned long _nextPoll;
-    unsigned int _pollingInterval;
+	OutputPin* _pin;
 
 public:
-    Potentiometer(const char* message, uint8_t pin, unsigned int threshold = 50, unsigned int pollingInterval = 100);
-    Potentiometer(const char* message, AnalogInput* input, unsigned int threshold = 50, unsigned int pollingInterval = 100);
+	Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
+    Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin* pin);
 
-    virtual void initInput();
-    virtual void pollInput();
+    virtual void onDcsBiosFrameSync();    
+};
+
+class DimmableLed : public IntegerListener {
+private:
+    AnalogOutput* _output;
+
+public:
+    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
+    DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput* output);
+
+    virtual void onDcsBiosFrameSync();    
 };
 
 #endif

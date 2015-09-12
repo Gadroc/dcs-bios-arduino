@@ -17,7 +17,7 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Switches.h"
-#include "DirectInputPin.h"
+#include "hal/DirectInputPin.h"
 
 PollingSwitch::PollingSwitch(const char* message) : PollingInput(message) {}
 

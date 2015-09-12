@@ -1,5 +1,5 @@
 /*
-	Copyright 2015 Craig Courtney
+    Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,24 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_BUTTONS_H_
-#define _DCSBIOS_BUTTONS_H_
+#ifndef _DCSBIOS_H_
+#define _DCSBIOS_H_
 
-#include <Arduino.h>
-#include "PollingInput.h"
-#include "InputPin.h"
+#include "pc/DcsBiosSerialDevice.h"
+#include "pc/DcsBiosRs485Device.h"
+#include "pc/DcsBiosRs485Controller.h"
 
-class ActionButton : public PollingInput {
-private:
-    const char* _arg;
-    InputPin* _pin;
-    uint8_t _lastState;
-    virtual void initInput();
-    virtual void pollInput();
+#include "hal/DirectInputPin.h"
+#include "hal/DirectOutputPin.h"
+#include "hal/DirectAnalogInput.h"
+#include "hal/DirectAnalogOutput.h"
+#include "hal/DirectStepperDriver.h"
+#include "hal/AcceleratedStepperOutput.h"
 
-public:
-    ActionButton(const char* message, const char* arg, uint8_t pin, int debounceTime = 10);
-    ActionButton(const char* message, const char* arg, InputPin* pin);
-};
+#include "controls/Buttons.h"
+#include "controls/Leds.h"
+#include "controls/Switches.h"
+#include "controls/Potentiometers.h"
+#include "controls/Steppers.h"
 
 #endif

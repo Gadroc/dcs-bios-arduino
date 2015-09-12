@@ -17,8 +17,8 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Leds.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogOutput.h"
+#include "hal/DirectOutputPin.h"
+#include "hal/DirectAnalogOutput.h"
 
 Led::Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin) : IntegerListener(address, mask, shift) {
     _pin = new DirectOutputPin(pin);

@@ -1,5 +1,5 @@
 /*
-	Copyright 2015 Craig Courtney
+    Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,24 +16,32 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_STEPPER_H_
-#define _DCSBIOS_STEPPER_H_
+#ifndef _DCSBIOS_BUSDEVICERS485_H_
+#define _DCSBIOS_BUSDEVICERS485_H_
 
 #include <Arduino.h>
-#include "IntegerListener.h"
-#include "StepperOutput.h"
+#include "DcsBiosDevice.h"
+#include "DcsBiosRs485BusParser.h"
+#include "hal/DirectOutputPin.h"
 
-class Stepper : IntegerListener {
+class DcsBiosRs485Device : public DcsBiosDevice {
 private:
-    StepperOutput* _output;
-    unsigned int _maxValue;
-    long _minPosition;
-    long _maxPosition;
+    Stream* _busStream;
+    DcsBiosRs485BusParser _bus;
+    DirectOutputPin _busTxPin;    
+    uint8_t _address;
+
+    void sendPollResponse();
+    void addPollingResponseString(const char* string);
+
+    static uint8_t pollingResponseBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];
+    static uint8_t pollingResponseBufferSize;
 
 public:
-    Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput* stepperOutput);
+    DcsBiosRs485Device(Stream *busStream, int txPin, uint8_t address);
 
-    virtual void onDcsBiosFrameSync();
+    virtual void sendDcsBiosMessage(const char* message, const char* arg);
+    virtual void process();
 };
 
 #endif

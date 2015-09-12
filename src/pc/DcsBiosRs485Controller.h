@@ -22,7 +22,7 @@
 #include <Arduino.h>
 #include "DcsBiosRs485BusParser.h"
 #include "DcsBiosRs485PcParser.h"
-#include "DirectOutputPin.h"
+#include "hal/DirectOutputPin.h"
 
 #define PC_NOTIFICATION_STATUSREADY 'r'
 #define PC_NOTIFICATION_STATUSFULL 't'

@@ -1,5 +1,5 @@
 /*
-    Copyright 2015 Craig Courtney
+	Copyright 2015 Craig Courtney
 
     This file is part of DcsBios-Firmware.
 
@@ -16,25 +16,28 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#ifndef _DCSBIOS_H_
-#define _DCSBIOS_H_
-
-#include "DcsBiosSerialDevice.h"
-#include "DcsBiosRs485Device.h"
-#include "DcsBiosRs485Controller.h"
-
-#include "DirectInputPin.h"
-#include "DirectOutputPin.h"
-#include "DirectAnalogInput.h"
-#include "DirectAnalogOutput.h"
-
-#include "DirectStepperDriver.h"
-#include "AcceleratedStepperOutput.h"
-
 #include "Buttons.h"
-#include "Leds.h"
-#include "Switches.h"
-#include "Potentiometers.h"
-#include "Steppers.h"
+#include "hal/DirectInputPin.h"
 
-#endif
+ActionButton::ActionButton(const char* message, const char* arg, uint8_t pin, int debounceTime) : PollingInput(message) {
+    ActionButton(message, arg, new DirectInputPin(pin, debounceTime));
+}
+
+ActionButton::ActionButton(const char* message, const char* arg, InputPin* pin) : PollingInput(message) {
+    _arg = arg;
+    _pin = pin;
+}
+
+void ActionButton::initInput() {
+    _lastState = _pin->readState();
+}
+
+void ActionButton::pollInput() {
+    uint8_t state = _pin->readState();
+    if (state != _lastState) {
+        if (state == LOW) {
+            sendMessage(_arg);
+        }
+        _lastState = state;
+    }
+}

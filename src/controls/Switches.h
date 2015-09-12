@@ -20,8 +20,8 @@
 #define _DCSBIOS_SWITCHES_H_
 
 #include <Arduino.h>
-#include "PollingInput.h"
-#include "InputPin.h"
+#include "hal/InputPin.h"
+#include "dcs/PollingInput.h"
 
 class PollingSwitch : public PollingInput {
 private:    

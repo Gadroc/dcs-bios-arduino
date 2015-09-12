@@ -17,7 +17,7 @@
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
 #include "Potentiometers.h"
-#include "DirectAnalogInput.h"
+#include "hal/DirectAnalogInput.h"
 
 Potentiometer::Potentiometer(const char* message, uint8_t pin, unsigned int threshold, unsigned int pollingInterval) : PollingInput(message) {
     _input = new DirectAnalogInput(pin);

@@ -16,28 +16,24 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
-#include "Buttons.h"
-#include "DirectInputPin.h"
+#ifndef _DCSBIOS_BUTTONS_H_
+#define _DCSBIOS_BUTTONS_H_
 
-ActionButton::ActionButton(const char* message, const char* arg, uint8_t pin, int debounceTime) : PollingInput(message) {
-    ActionButton(message, arg, new DirectInputPin(pin, debounceTime));
-}
+#include <Arduino.h>
+#include "dcs/PollingInput.h"
+#include "hal/InputPin.h"
 
-ActionButton::ActionButton(const char* message, const char* arg, InputPin* pin) : PollingInput(message) {
-    _arg = arg;
-    _pin = pin;
-}
+class ActionButton : public PollingInput {
+private:
+    const char* _arg;
+    InputPin* _pin;
+    uint8_t _lastState;
+    virtual void initInput();
+    virtual void pollInput();
 
-void ActionButton::initInput() {
-    _lastState = _pin->readState();
-}
+public:
+    ActionButton(const char* message, const char* arg, uint8_t pin, int debounceTime = 10);
+    ActionButton(const char* message, const char* arg, InputPin* pin);
+};
 
-void ActionButton::pollInput() {
-    uint8_t state = _pin->readState();
-    if (state != _lastState) {
-        if (state == LOW) {
-            sendMessage(_arg);
-        }
-        _lastState = state;
-    }
-}
+#endif
