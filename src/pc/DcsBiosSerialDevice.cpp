@@ -18,22 +18,21 @@
 */
 #include "DcsBiosSerialDevice.h"
 
-DcsBiosSerialDevice::DcsBiosSerialDevice(Stream *serial) {
-  _serial = serial;
+DcsBiosSerialDevice::DcsBiosSerialDevice(Stream& serial) : _serial(serial) {
 }
 
 void DcsBiosSerialDevice::process() {
-  int in = _serial->read();
+  int in = _serial.read();
   while(in > -1) {
     _parser.processByte(in);    
-    in = _serial->read();
+    in = _serial.read();
   }
 }
 
-void DcsBiosSerialDevice::sendDcsBiosMessage(const char* msg, const char* arg) {
-  _serial->write(msg);
-  _serial->write(' ');
-  _serial->write(arg);
-  _serial->write('\n');
-  _serial->flush();
+void DcsBiosSerialDevice::sendDcsBiosMessage(const char msg[], const char arg[]) {
+  _serial.write(msg);
+  _serial.write(' ');
+  _serial.write(arg);
+  _serial.write('\n');
+  _serial.flush();
 }

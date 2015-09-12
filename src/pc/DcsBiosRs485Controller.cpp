@@ -18,12 +18,10 @@
 */
 #include "DcsBiosRs485Controller.h"
 
-DcsBiosRs485Controller::DcsBiosRs485Controller(Stream& busStream, int txPin, Stream* pcStream) : _busStream(busStream) {
+DcsBiosRs485Controller::DcsBiosRs485Controller(Stream& busStream, int txPin, Stream& pcStream) : _busStream(busStream), _pcStream(pcStream) {
     _busTxPin.setPin(txPin);
     _busTxPin.clear();
     _busBufferSize = 0;
-
-    _pcStream = pcStream;
 
     _busWaitingResponse = false;
     _busPollingAddress = 0;
@@ -93,30 +91,30 @@ void DcsBiosRs485Controller::processBusInput() {
 
 void DcsBiosRs485Controller::processBusPacket() {
     if (_busBufferSize > 0 && _bus.getPacketType() == DCSBIOS_RS485_PACKETYPE_POLLING_RESPONSE) {
-        _pcStream->write('m');
-        _pcStream->write(_busBufferSize);
-        _pcStream->write(_busBuffer, _busBufferSize);
+        _pcStream.write('m');
+        _pcStream.write(_busBufferSize);
+        _pcStream.write(_busBuffer, _busBufferSize);
         _busBufferSize = 0;
     }
 }
 
 void DcsBiosRs485Controller::processPcInput() {
-    _pc.processByte(_pcStream->read());
+    _pc.processByte(_pcStream.read());
     switch (_pc.getState()) {
         case PC_STATUSREADY:
-            _pcStream->write(PC_NOTIFICATION_STATUSREADY);
+            _pcStream.write(PC_NOTIFICATION_STATUSREADY);
             break;
 
         case PC_STATUSFULL:
-            _pcStream->write(PC_NOTIFICATION_STATUSFULL);
+            _pcStream.write(PC_NOTIFICATION_STATUSFULL);
             break;
 
         case PC_DATARECEIVED:
-            _pcStream->write(PC_NOTIFICATION_DATARECEIVED);
+            _pcStream.write(PC_NOTIFICATION_DATARECEIVED);
             break;
 
         case PC_DATAERROR:
-            _pcStream->write(PC_NOTIFICATION_DATAERROR);
+            _pcStream.write(PC_NOTIFICATION_DATAERROR);
             break;
     }
 }

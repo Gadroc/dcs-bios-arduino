@@ -44,7 +44,7 @@ private:
     uint8_t _busPollingAddress;
     unsigned long _busPollingTimeout;
 
-    Stream* _pcStream;
+    Stream& _pcStream;
     DcsBiosRs485PcParser _pc;
 
     void processBusInput();
@@ -54,7 +54,7 @@ private:
     void processPcInput();
 
 public:
-    DcsBiosRs485Controller(Stream& busStream, int txPin, Stream* pcStream);
+    DcsBiosRs485Controller(Stream& busStream, int txPin, Stream& pcStream);
     void process();
 };
 

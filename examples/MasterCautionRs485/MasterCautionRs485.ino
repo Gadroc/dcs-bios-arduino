@@ -14,7 +14,7 @@
 // what pin to use for enabling transmitting on the RS-485 bus
 // and what address we respond to for input polling.  This address must be unique
 // for every device on the RS-485 device.
-DcsBiosRs485Device dcsBiosDevice(&BUS_SERIAL, BUS_TX_PIN, BUS_ADDRESS);
+DcsBiosRs485Device dcsBiosDevice(BUS_SERIAL, BUS_TX_PIN, BUS_ADDRESS);
 
 /* Declare a Master Caution Reset button on pin 10 */
 Switch2Pos masterCautionButton("UFC_MASTER_CAUTION", 10);

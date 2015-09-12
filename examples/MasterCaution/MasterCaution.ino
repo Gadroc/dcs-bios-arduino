@@ -1,7 +1,7 @@
 #include <DcsBios.h>
 
 /* Instantiate a device object to parse the DCS-BIOS export stream */
-DcsBiosSerialDevice dcsBiosDevice(&Serial);
+DcsBiosSerialDevice dcsBiosDevice(Serial);
 
 /* Declare a Master Caution Reset button on pin 10 */
 Switch2Pos masterCautionButton("UFC_MASTER_CAUTION", 10);

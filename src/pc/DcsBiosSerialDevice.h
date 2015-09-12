@@ -25,12 +25,12 @@
 
 class DcsBiosSerialDevice : public DcsBiosDevice {
 private:
-    Stream* _serial;
+    Stream& _serial;
 
 public:
-    DcsBiosSerialDevice(Stream *serial);
+    DcsBiosSerialDevice(Stream& serial);
 
-    virtual void sendDcsBiosMessage(const char* msg, const char* arg);
+    virtual void sendDcsBiosMessage(const char msg[], const char arg[]);
     virtual void process();
 };
 
