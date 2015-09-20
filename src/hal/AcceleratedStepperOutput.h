@@ -63,9 +63,6 @@ private:
     // Minimum step delay
     unsigned int _minStepDelay;
 
-    // Number of acceleration steps to get to maxSpeed
-    unsigned int _maxAccelerationSteps;
-
     // Current state of the running stepper
     ACCEL_STEPPER_RUNSTATES _runState;
 
@@ -106,10 +103,10 @@ public:
     // driver - Stepper driver used to control this stepper motor.
     // stepsPerRevolution - Native steps per revolution for the stepper motor (1.8 degeree stepper is 200)
     // microsteps - How many microsteps does the driver apply for this motor (1 = no microstepping)
-    // acceleration - Acceleration/Deceleration rate for this motor in 0.01*rad/sec^2 (8 radion/sec^s would be 800)
     // maxSpeed - Maximum rotation speed for this motor in 0.01*rad/sec (6.28 radian/sec would be 628)
+    // acceleration - Acceleration/Deceleration rate for this motor in 0.01*rad/sec^2 (8 radion/sec^s would be 800)
     // frequency - Step counter frequency.  Default is appropraite for poll based timing like the run function on this class.  Set appropriately if calling step function from a timer interrupt.
-    AcceleratedStepperOutput(StepperDriver& drvier, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency = 1000000L);
+    AcceleratedStepperOutput(StepperDriver& driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int maxSpeed, unsigned int acceleration = 65535, unsigned long frequency = 1000000L);
 
     // Checks time and steps the motor if necessary.  Must be called as frequent as possible
     virtual void run();

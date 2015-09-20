@@ -18,7 +18,7 @@
 */
 #include "AcceleratedStepperOutput.h"
 
-AcceleratedStepperOutput::AcceleratedStepperOutput(StepperDriver& driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int acceleration, unsigned int maxSpeed, unsigned long frequency) : _driver(driver) {
+AcceleratedStepperOutput::AcceleratedStepperOutput(StepperDriver& driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int maxSpeed, unsigned int acceleration, unsigned long frequency) : _driver(driver) {
     _frequency = frequency;
     _stepsPerRevolution = stepsPerRevolution * microsteps;    
     _acceleration = acceleration;
@@ -38,10 +38,10 @@ AcceleratedStepperOutput::AcceleratedStepperOutput(StepperDriver& driver, unsign
 
     // Lets calculate all initial values now
     _minStepDelay = A_T_x100 / _maxSpeed;
-    _initialStepDelay = (T1_FREQ_148 * sqrt(A_SQ / _acceleration))/100;
-    _maxAccelerationSteps = (long)_maxSpeed*_maxSpeed/(long)(((long)A_x20000*_acceleration)/100);
-    if(_maxAccelerationSteps == 0){
-        _maxAccelerationSteps = 1;
+    if (_acceleration == 65535) {
+        _initialStepDelay = _minStepDelay;
+    } else {
+        _initialStepDelay = (T1_FREQ_148 * sqrt(A_SQ / _acceleration))/100;        
     }
 }
 
