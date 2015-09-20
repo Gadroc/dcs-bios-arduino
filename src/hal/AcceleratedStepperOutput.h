@@ -104,7 +104,7 @@ public:
     // stepsPerRevolution - Native steps per revolution for the stepper motor (1.8 degeree stepper is 200)
     // microsteps - How many microsteps does the driver apply for this motor (1 = no microstepping)
     // maxSpeed - Maximum rotation speed for this motor in 0.01*rad/sec (6.28 radian/sec would be 628)
-    // acceleration - Acceleration/Deceleration rate for this motor in 0.01*rad/sec^2 (8 radion/sec^s would be 800)
+    // acceleration - Acceleration/Deceleration rate for this motor in 0.01*rad/sec^2 (8 radion/sec^s would be 800) (65535 disables acceleration which is the default)
     // frequency - Step counter frequency.  Default is appropraite for poll based timing like the run function on this class.  Set appropriately if calling step function from a timer interrupt.
     AcceleratedStepperOutput(StepperDriver& driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int maxSpeed, unsigned int acceleration = 65535, unsigned long frequency = 1000000L);
 
