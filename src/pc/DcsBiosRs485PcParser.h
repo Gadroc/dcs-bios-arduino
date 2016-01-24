@@ -29,31 +29,28 @@
 #define DCSBIOS_RS485_PC_BUFFER_COUNT 4
 #define DCSBIOS_RS485_PC_BUFFER_SIZE 255
 
-enum PC_STATE : uint8_t {
-    PC_WAITING = 0,         // Waiting for command from PC
-    PC_LOADINGDATA = 1,     // Waiting for data load
-    PC_STATUSREADY = 2,     // Buffers available for PC
-    PC_STATUSFULL = 3,      // Buffers full
-    PC_DATARECEIVED = 4,    // Data received and validated
-    PC_DATAERROR = 5        // Error receiving data (Timeout or Checksum Error)
-};
+#define PC_WAITING 0         // Waiting for command from PC
+#define PC_LOADINGDATA 1     // Waiting for data load
+#define PC_STATUSREADY 2     // Buffers available for PC
+#define PC_STATUSFULL 3      // Buffers full
+#define PC_DATARECEIVED 4    // Data received and validated
+#define PC_DATAERROR 5       // Error receiving data (Timeout or Checksum Error)
 
-enum PC_LOADINGSTATE {
-    PCLOAD_DATASIZE = 0,        // Waiting for data size
-    PCLOAD_DATA = 1,            // Waiting for data load
-    PCLOAD_DATACHECKSUM = 2     // Waiting for data checksum    
-};
+#define PCLOAD_DATASIZE 0      // Waiting for data size
+#define PCLOAD_DATA 1          // Waiting for data load
+#define PCLOAD_DATACHECKSUM 2  // Waiting for data checksum    
+
 
 class DcsBiosRs485PcParser {
 private:
-    PC_STATE _pcState;
+    uint8_t _pcState;
     unsigned long _pcCommandTimeout;
 
     bool _pcBufferMarked;
     uint8_t _pcBufferHead;
     uint8_t _pcBufferTail;
     uint8_t _pcBuffersReady;
-    PC_LOADINGSTATE _pcBufferLoadState;
+    uint8_t _pcBufferLoadState;
     uint8_t _pcBufferLoadIndex;
     uint8_t _pcBufferLoadChecksum;
     uint8_t _pcBuffersSize[DCSBIOS_RS485_PC_BUFFER_COUNT];
@@ -67,7 +64,7 @@ public:
     DcsBiosRs485PcParser();
     void processByte(int in);
 
-    PC_STATE getState();
+    uint8_t getState();
     bool bufferReady();
     uint8_t getCurrentBufferSize();
     uint8_t* getCurrentBuffer();
@@ -78,7 +75,7 @@ inline void DcsBiosRs485PcParser::setStatusState() {
     _pcState = _pcBuffersReady < DCSBIOS_RS485_PC_BUFFER_COUNT ? PC_STATUSREADY : PC_STATUSFULL;
 }
 
-inline PC_STATE DcsBiosRs485PcParser::getState() {
+inline uint8_t DcsBiosRs485PcParser::getState() {
     return _pcState;
 }
 

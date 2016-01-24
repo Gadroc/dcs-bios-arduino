@@ -30,21 +30,19 @@
 #define DCSBIOS_RS485_PACKETYPE_POLLING_REQUEST 0
 #define DCSBIOS_RS485_PACKETYPE_POLLING_RESPONSE 1
 
-enum PACKET_STATE : uint8_t {
-    PACKET_START = 0,    // Waiting for Packet Start
-    PACKET_LEADIN = 1,   // Waiting for Packet Lead In
-    PACKET_ADDRTYPE = 2, // Waiting for Packet Address/Type
-    PACKET_SIZE = 3,     // Waiting for Packet Size
-    PACKET_DATA = 4,     // Waiting for Packet Data
-    PACKET_COMPLETE = 5, // Packet is complete
-    PACKET_TIMEOUT = 6   // Packet has timedout
-};
+#define PACKET_START 0    // Waiting for Packet Start
+#define PACKET_LEADIN 1   // Waiting for Packet Lead In
+#define PACKET_ADDRTYPE 2 // Waiting for Packet Address/Type
+#define PACKET_SIZE 3     // Waiting for Packet Size
+#define PACKET_DATA 4     // Waiting for Packet Data
+#define PACKET_COMPLETE 5 // Packet is complete
+#define PACKET_TIMEOUT 6  // Packet has timedout
 
 #define PACKET_TIMEOUT_DURATION 2000
 
 class DcsBiosRs485BusParser {
     private:
-        PACKET_STATE _packetState;        
+        uint8_t _packetState;        
         uint8_t _packetAddressType;
         uint8_t _packetDataSize;
         uint8_t _packetDataRemaining;
@@ -57,7 +55,7 @@ class DcsBiosRs485BusParser {
     public:
         DcsBiosRs485BusParser();
         
-        PACKET_STATE getPacketState();
+        uint8_t getPacketState();
         uint8_t getPacketAddress();
         uint8_t getPacketType();
         uint8_t getPacketDataSize();
@@ -77,7 +75,7 @@ inline uint8_t DcsBiosRs485BusParser::getPacketDataByte() {
     return _packetDataByte;
 }
 
-inline PACKET_STATE DcsBiosRs485BusParser::getPacketState() {
+inline uint8_t DcsBiosRs485BusParser::getPacketState() {
     return _packetState;
 }
 

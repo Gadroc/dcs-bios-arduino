@@ -49,7 +49,7 @@ private:
 
     void processBusInput();
     void sendPollingPacket();
-    void processBusPacket();    
+    void processBusPacket();
 
     void processPcInput();
 
