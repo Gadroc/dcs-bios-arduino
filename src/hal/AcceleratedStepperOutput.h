@@ -116,6 +116,10 @@ public:
 
     // Sets the current step position of the motor
     virtual void setCurrentPosition(long currentPosition);  
+
+    virtual long getCurrentPosition() {
+        return _currentPosition;
+    }
 };
 
 #endif
