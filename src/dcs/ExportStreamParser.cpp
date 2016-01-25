@@ -73,8 +73,8 @@ void ExportStreamParser::processByte(uint8_t c) {
             // Frame sync moved to end of frame.  All time consumeing updates should
             // be handled in framesync during the down time between frame transmissions.
             if (_address == 0xfffe) {
-                onDcsBiosFrameSync();
                 ExportStreamListener::handleDcsBiosFrameSync();
+                onDcsBiosFrameSync();
             }
         } else {
             _address += 2;
