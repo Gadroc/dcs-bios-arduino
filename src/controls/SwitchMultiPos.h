@@ -25,12 +25,12 @@
 
 class SwitchMultiPos : public PollingSwitch {
 private: 
-    InputPin* _inputPins;
+    InputPin** _inputPins;
     uint8_t _numberOfPins;
 
 public:
     SwitchMultiPos(const char message[], const uint8_t pins[], uint8_t numberOfPins, int debounceTime = 10);
-    SwitchMultiPos(const char message[], InputPin* inputPins, uint8_t numberOfPins);
+    SwitchMultiPos(const char message[], InputPin** inputPins, uint8_t numberOfPins);
     virtual uint8_t readState();
 };
 

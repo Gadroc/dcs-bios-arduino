@@ -20,22 +20,23 @@
 #include "hal/DirectInputPin.h"
 
 SwitchMultiPos::SwitchMultiPos(const char message[], const uint8_t pins[], uint8_t numberOfPins, int debounceTime) : PollingSwitch(message) {
-    DirectInputPin* inputPins = new DirectInputPin[numberOfPins];
+    _inputPins = new InputPin*[numberOfPins];
     for(uint8_t i=0; i<numberOfPins; i++) {
-        inputPins[i].setPin(numberOfPins, debounceTime);
+        _inputPins[i] = new DirectInputPin(pins[i], debounceTime);
     }
-    _inputPins = inputPins;
     _numberOfPins = numberOfPins;
 }
 
-SwitchMultiPos::SwitchMultiPos(const char message[], InputPin* inputPins, uint8_t numberOfPins) : PollingSwitch(message) {
+SwitchMultiPos::SwitchMultiPos(const char message[], InputPin** inputPins, uint8_t numberOfPins) : PollingSwitch(message) {
     _inputPins = inputPins;
     _numberOfPins = numberOfPins;
 }
 
 uint8_t SwitchMultiPos::readState() {
-    for (uint8_t i=0; i<_numberOfPins; i++) {
-        if (_inputPins[i].readState() == LOW) return i;
+    for(uint8_t i=0; i<_numberOfPins; i++) {
+        if (_inputPins[i]->readState() == LOW) {
+            return i;
+        }
     }
     return _lastState;
 }
