@@ -8,7 +8,7 @@ CMakeScripts
 Makefile
 cmake_install.cmake
 install_manifest.txt
-
+cmake-build-*
 
 ### Intellij ###
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and Webstorm
