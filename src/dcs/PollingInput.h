@@ -19,7 +19,7 @@
 #ifndef _DCSBIOS_POLLINGINPUT_H_
 #define _DCSBIOS_POLLINGINPUT_H_
 
-#include <Arduino.h>
+#include <stdint.h>
 #include "Input.h"
 
 class PollingInput : public Input {

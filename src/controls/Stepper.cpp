@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 #include "Stepper.h"
 
 Stepper::Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput& stepperOutput) : IntegerListener(address, mask, shift), _output(stepperOutput) {

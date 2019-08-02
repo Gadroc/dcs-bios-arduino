@@ -1,0 +1,3 @@
+add_arduino_executable(master_caution_rs485_example ${uno_board_id})
+target_sketches(master_caution_rs485_example ${uno_board_id} MasterCautionRs485.ino)
+target_link_libraries(master_caution_rs485_example PRIVATE dcsbios_uno_lib)

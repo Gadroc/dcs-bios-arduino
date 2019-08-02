@@ -19,8 +19,6 @@
 #ifndef _DCSBIOS_STEPPEROUTPUT_H_
 #define _DCSBIOS_STEPPEROUTPUT_H_
 
-#include <Arduino.h>
-
 // StepperOutput classes generate pulse trains from absolute position indicators.
 class StepperOutput {
 private:

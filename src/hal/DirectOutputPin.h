@@ -19,7 +19,7 @@
 #ifndef _DCSBIOS_DIRECTOUTPUTPIN_H_
 #define _DCSBIOS_DIRECTOUTPUTPIN_H_
 
-#include <Arduino.h>
+#include <stdint.h>
 #include "OutputPin.h"
 
 // Helper class to do highspeed digital input/output on the arduino.

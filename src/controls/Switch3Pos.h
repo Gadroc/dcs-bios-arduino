@@ -19,7 +19,6 @@
 #ifndef _DCSBIOS_SWITCH3POS_H_
 #define _DCSBIOS_SWITCH3POS_H_
 
-#include <Arduino.h>
 #include "PollingSwitch.h"
 #include "hal/InputPin.h"
 

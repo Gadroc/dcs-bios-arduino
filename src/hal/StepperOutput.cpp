@@ -16,6 +16,7 @@
     You should have received a copy of the GNU General Public License
     along with DcsBios-Firmware.  If not, see <http://www.gnu.org/licenses/>.
 */
+#include <Arduino.h>
 #include "StepperOutput.h"
 
 StepperOutput* StepperOutput::firstStepperOutput = NULL;

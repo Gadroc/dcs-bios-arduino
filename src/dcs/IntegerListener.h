@@ -19,7 +19,7 @@
 #ifndef _DCSBIOS_INTEGERLISTENER_H_
 #define _DCSBIOS_INTEGERLISTENER_H_
 
-#include <Arduino.h>
+#include <stdint.h>
 #include "ExportStreamListener.h"
 
 class IntegerListener : ExportStreamListener {

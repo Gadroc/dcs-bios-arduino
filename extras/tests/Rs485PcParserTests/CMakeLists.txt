@@ -1,0 +1,3 @@
+add_arduino_executable(rs485_pc_parser_test ${uno_board_id})
+target_sketches(rs485_pc_parser_test ${uno_board_id} Rs485PcParserTests.ino)
+target_link_libraries(rs485_pc_parser_test PRIVATE arduino_unit_lib dcsbios_uno_lib)

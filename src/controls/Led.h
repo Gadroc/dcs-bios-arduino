@@ -19,7 +19,7 @@
 #ifndef _DCSBIOS_LED_H_
 #define _DCSBIOS_LED_H_
 
-#include <Arduino.h>
+#include <stdint.h>
 #include "hal/OutputPin.h"
 #include "dcs/IntegerListener.h"
 

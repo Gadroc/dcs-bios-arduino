@@ -19,7 +19,7 @@
 #ifndef _DCSBIOS_ACTIONBUTTON_H_
 #define _DCSBIOS_ACTIONBUTTON_H_
 
-#include <Arduino.h>
+#include <stdint.h>
 #include "dcs/PollingInput.h"
 #include "hal/InputPin.h"
 

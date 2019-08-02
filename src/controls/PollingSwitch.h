@@ -19,7 +19,6 @@
 #ifndef _DCSBIOS_POLLINGSWITCH_H_
 #define _DCSBIOS_POLLINGSWITCH_H_
 
-#include <Arduino.h>
 #include "dcs/PollingInput.h"
 
 class PollingSwitch : public PollingInput {

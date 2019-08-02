@@ -19,8 +19,6 @@
 #ifndef _DCSBIOS_INPUT_H_
 #define _DCSBIOS_INPUT_H_
 
-#include <Arduino.h>
-
 void sendDcsBiosMessage(const char msg[], const char args[]);
 
 class Input {

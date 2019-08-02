@@ -19,7 +19,6 @@
 #ifndef _DCSBIOS_STEPPER_H_
 #define _DCSBIOS_STEPPER_H_
 
-#include <Arduino.h>
 #include "hal/StepperOutput.h"
 #include "dcs/IntegerListener.h"
 

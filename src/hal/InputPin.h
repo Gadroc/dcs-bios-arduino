@@ -19,7 +19,7 @@
 #ifndef _DCSBIOS_INPUTPIN_H_
 #define _DCSBIOS_INPUTPIN_H_
 
-#include <Arduino.h>
+#include <stdint.h>
 
 // Interface for all input pins.
 class InputPin {

@@ -19,8 +19,6 @@
 #ifndef _DCSBIOS_EXPORTSTREAMLISTENER_H_
 #define _DCSBIOS_EXPORTSTREAMLISTENER_H_
 
-#include <Arduino.h>
-
 class ExportStreamListener {
 private:
     ExportStreamListener* nextExportStreamListener;

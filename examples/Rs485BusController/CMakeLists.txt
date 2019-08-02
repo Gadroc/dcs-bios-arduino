@@ -1,0 +1,3 @@
+add_arduino_executable(rs485_bus_controller_example ${leonardo_board_id})
+target_sketches(rs485_bus_controller_example ${leonardo_board_id} Rs485BusController.ino)
+target_link_libraries(rs485_bus_controller_example PRIVATE dcsbios_leonardo_lib)

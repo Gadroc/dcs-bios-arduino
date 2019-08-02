@@ -19,8 +19,6 @@
 #ifndef _DCSBIOS_OUTPUTPIN_H_
 #define _DCSBIOS_OUTPUTPIN_H_
 
-#include <Arduino.h>
-
 // Interface for all input pins.
 class OutputPin {
 public:    

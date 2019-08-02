@@ -19,7 +19,6 @@
 #ifndef _DCSBIOS_POTENTIOMETER_H_
 #define _DCSBIOS_POTENTIOMETER_H_
 
-#include <Arduino.h>
 #include "hal/AnalogInput.h"
 #include "dcs/PollingInput.h"
 
