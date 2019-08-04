@@ -72,6 +72,7 @@ function(_set_core_lib_flags _core_target_name _board_id)
 endfunction()
 
 function(_create_core_lib _board_id)
+
     get_core_lib_target_name(${_board_id} core_lib_target)
     if (NOT TARGET ${core_lib_target})
         _get_board_core(${_board_id} board_core) # Get board's core
@@ -114,6 +115,7 @@ endfunction()
 function(add_arduino_core_lib _target_name _board_id)
 
     _create_core_lib("${_board_id}")
+    get_core_lib_target_name(${_board_id} core_lib_target)
 
     # Link Core-Lib to executable target
     if (TARGET ${_target_name}) # Executable/Firmware target also exists
