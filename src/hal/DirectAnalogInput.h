@@ -30,17 +30,14 @@
 class DirectAnalogInput : public AnalogInput
 {
 private:
-    uint8_t _channel;       // Analog channel to read from for pin
-    uint8_t _reference;
+          uint8_t _channel;     // Analog channel to read from for pin
+    const uint8_t _reference;   // Reference voltage to use
 
 public:
-    DirectAnalogInput();
-    DirectAnalogInput(uint8_t pin, uint8_t analog_reference = DEFAULT);
-    
-    void setPin(uint8_t pin, uint8_t analog_reference = DEFAULT);
+    explicit DirectAnalogInput(uint8_t pin, uint8_t analog_reference = DEFAULT);
 
-    virtual int maxValue();
-    virtual int read();
+    int maxValue() override;
+    int read() override;
 };
 
 inline int DirectAnalogInput::maxValue() { return 1023; }

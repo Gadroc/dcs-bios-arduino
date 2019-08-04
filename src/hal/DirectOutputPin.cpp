@@ -23,10 +23,27 @@
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 
-DirectOutputPin::DirectOutputPin() {}
+uint8_t DirectOutputPin::_dummyRegister = 0;
 
-DirectOutputPin::DirectOutputPin(uint8_t pin) {
-	setPin(pin);
+DirectOutputPin::DirectOutputPin(uint8_t pin) : _bitMask(digitalPinToBitMask(pin)) {
+    uint8_t port = digitalPinToPort(pin);
+
+    if (port == NOT_A_PIN) {
+        _outputRegister = &_dummyRegister;
+        return;
+    }
+
+    volatile uint8_t *modeRegister = portModeRegister(port);
+
+    _outputRegister = portOutputRegister(port);
+
+    uint8_t oldSREG = SREG;
+    cli();
+    *modeRegister |= _bitMask;
+    SREG = oldSREG;
+
+    uint8_t timer = digitalPinToTimer(pin);
+    if (timer != NOT_ON_TIMER) turnOffPWM(timer);
 }
 
 void DirectOutputPin::turnOffPWM(uint8_t timer)
@@ -89,38 +106,22 @@ void DirectOutputPin::turnOffPWM(uint8_t timer)
 	}
 }
 
-void DirectOutputPin::setPin(uint8_t pin) 
-{
-	uint8_t port = digitalPinToPort(pin);
-
-	if (port == NOT_A_PIN) return;
-
-	volatile uint8_t *modeRegister = portModeRegister(port);
-
-	_outputRegister = portOutputRegister(port);
-	_bitMask = digitalPinToBitMask(pin);
-
-	uint8_t oldSREG = SREG;
-	cli();
-	*modeRegister |= _bitMask;
-	SREG = oldSREG;
-
-	uint8_t timer = digitalPinToTimer(pin);
-	if (timer != NOT_ON_TIMER) turnOffPWM(timer);
-}
-
 void DirectOutputPin::clear()
 {
-	uint8_t oldSREG = SREG;
-	cli();
-	 *_outputRegister &= ~_bitMask; 
- 	SREG = oldSREG;		
+    uint8_t oldSREG = SREG;
+    cli();
+	 *_outputRegister &= ~_bitMask;
+    SREG = oldSREG;
 }
 
 void DirectOutputPin::set()
 {
-	uint8_t oldSREG = SREG;
-	cli();
+    uint8_t oldSREG = SREG;
+    cli();
 	*_outputRegister |= _bitMask;
- 	SREG = oldSREG;		
+    SREG = oldSREG;
+}
+
+bool DirectOutputPin::isValid() {
+    return (_outputRegister != &_dummyRegister);
 }

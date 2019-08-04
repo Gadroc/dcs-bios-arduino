@@ -25,13 +25,8 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
     
-DirectAnalogOutput::DirectAnalogOutput() {}
-    
-DirectAnalogOutput::DirectAnalogOutput(uint8_t pin) {
-	setPin(pin);
-}
-
-void DirectAnalogOutput::setPin(uint8_t pin) 
+DirectAnalogOutput::DirectAnalogOutput(uint8_t pin) :
+    _bitMask(digitalPinToBitMask(pin)), _timer(digitalPinToTimer(pin))
 {
 	uint8_t port = digitalPinToPort(pin);
 
@@ -40,14 +35,11 @@ void DirectAnalogOutput::setPin(uint8_t pin)
 	volatile uint8_t *modeRegister = portModeRegister(port);
 
 	_outputRegister = portOutputRegister(port);
-	_bitMask = digitalPinToBitMask(pin);
 
 	uint8_t oldSREG = SREG;
 	cli();
 	*modeRegister |= _bitMask;
 	SREG = oldSREG;
-
-	_timer = digitalPinToTimer(pin);
 }
 
 void DirectAnalogOutput::off()

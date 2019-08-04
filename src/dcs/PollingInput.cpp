@@ -25,7 +25,7 @@ PollingInput::PollingInput(const char* message) : Input(message) {
     firstPollingInput = this;
 }
 
-void PollingInput::initInputs() {
+void PollingInput::begin() {
     PollingInput* bl = firstPollingInput;
     while (bl) {
         bl->initInput();

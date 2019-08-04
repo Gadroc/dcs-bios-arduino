@@ -32,7 +32,7 @@ set(dcsbios_sources
         src/hal/DirectAnalogOuptut.cpp
         src/hal/DirectInputPin.cpp
         src/hal/DirectOutputPin.cpp
-        src/hal/DirectStepperDriver.cpp
+        src/hal/PulseStepperDriver.cpp
         src/hal/StepperOutput.cpp
 
         src/pc/DcsBiosRs485BusParser.cpp

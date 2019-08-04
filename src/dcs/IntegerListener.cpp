@@ -18,10 +18,10 @@
 */
 #include "IntegerListener.h"
 
-IntegerListener::IntegerListener(unsigned int address, unsigned int mask, uint8_t shift) {
-    _address = address;
-    _mask = mask;
-    _shift = shift;
+IntegerListener::IntegerListener(unsigned int address, unsigned int mask, uint8_t shift) :
+    _address(address), _mask(mask), _shift(shift)
+{
+    _data = 0;
 }
 
 void IntegerListener::onDcsBiosWrite(unsigned int address, unsigned int value) {

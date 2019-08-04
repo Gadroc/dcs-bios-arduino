@@ -23,10 +23,10 @@ void sendDcsBiosMessage(const char msg[], const char args[]);
 
 class Input {
 private:
-    const char* _message;
+    const char * const _message;
 
 public:
-    Input(const char message[]);
+    explicit Input(const char message[]);
 
     void sendMessage(int attribute);
     void sendMessage(const char* arg);

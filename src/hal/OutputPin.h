@@ -21,7 +21,8 @@
 
 // Interface for all input pins.
 class OutputPin {
-public:    
+public:
+    virtual bool isValid() = 0;
     virtual void set() = 0;
     virtual void clear() = 0;
     void setState(bool state);

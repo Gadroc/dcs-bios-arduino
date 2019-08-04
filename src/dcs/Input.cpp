@@ -19,9 +19,7 @@
 #include <Arduino.h>
 #include "Input.h"
 
-Input::Input(const char message[]) {
-    _message = message;
-}
+Input::Input(const char message[]) : _message(message) {}
 
 void Input::sendMessage(int attribute) {
     char buf[12];

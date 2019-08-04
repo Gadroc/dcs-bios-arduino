@@ -23,28 +23,28 @@
 #include "StepperDriver.h"
 #include "DirectOutputPin.h"
 
-// Class to drive an external stepper motor with pins directly attached to the 
-// arduino.
-class DirectStepperDriver : public StepperDriver {
+// Class to drive an external stepper motor driver chip.
+class PulseStepperDriver : public StepperDriver {
 private:
-    DirectOutputPin _enablePin;
-    DirectOutputPin _directionPin;
-    DirectOutputPin _stepPin;
+    OutputPin& _enablePin;
+    OutputPin& _directionPin;
+    OutputPin& _stepPin;
 
     uint8_t _pulseWidth;
 
-    bool _useEnable;
-    bool _enabled;    
     bool _invertEnable;
-    
     bool _invertDirection;
+
+    bool _enabled;
     bool _forward;
 
     void setDirectionPin(bool forward);
     void setEnablePin(bool enabled);
 
 public:
-    DirectStepperDriver(uint8_t stepPin, uint8_t directionPin, uint8_t enablePin = 0xff);
+    PulseStepperDriver(OutputPin& stepPin, OutputPin& directionPin);
+    PulseStepperDriver(OutputPin& stepPin, OutputPin& directionPin, OutputPin& enablePin);
+    PulseStepperDriver(uint8_t stepPin, uint8_t directionPin, uint8_t enablePin = 0xff);
 
     // By default driver sets direction pin high to enable forward motion.
     // Set to true to invert this behavior.
@@ -60,16 +60,16 @@ public:
     void setPulseWidth(uint8_t pulseWidth);
 
     // Sets the direction to step. (1 CW/Forward, -1 CCW/Backward)
-    virtual void setDirection(int8_t dir);
+    void setDirection(int8_t dir) override;
 
     // Steps the motor in the current direction
-    virtual void step();
+    void step() override;
 
     // Enables the stepper motor
-    virtual void enable();
+    void enable() override;
 
     // Disables the stepper motor
-    virtual void disable();
+    void disable() override;
 };
 
 #endif

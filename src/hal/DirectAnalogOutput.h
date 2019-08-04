@@ -22,31 +22,26 @@
 #include <Arduino.h>
 #include "AnalogOutput.h"
 
-// Helper class to do highspeed analog output on the arduino.
-// Built in routines are incredibly slow due to significant saftey 
+// Helper class to do high-speed analog output on the Arduino.
+// Built in routines are incredibly slow due to significant safety
 // checks and runtime lookup of port and masks.  This class sacrifices
 // some memory in order to do look ups once on port and mask values, and only
 // does pin setup in begin call.
 class DirectAnalogOutput : public AnalogOutput
 {
 private:		
-    uint8_t _bitMask;                   // Bit mask of pin in register
+    const    uint8_t _bitMask;          // Bit mask of pin in register
     volatile uint8_t *_outputRegister;  // Write register for pin    
-	uint8_t _timer;
+	const    uint8_t _timer;            // Timer that this analog output is on
 
     void on();
     void off();
 
 public:
-    DirectAnalogOutput();
-	DirectAnalogOutput(uint8_t pin);
+	explicit DirectAnalogOutput(uint8_t pin);
 
-	void setPin(uint8_t pin);
-
-    virtual unsigned int maxValue();
-	virtual void write(unsigned int value);
+    unsigned int maxValue() override { return 255; };
+	void write(unsigned int value) override;
 };
-
-inline unsigned int DirectAnalogOutput::maxValue() { return 255; }
 
 #endif

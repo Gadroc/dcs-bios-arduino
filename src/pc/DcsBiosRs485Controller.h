@@ -37,7 +37,7 @@ class DcsBiosRs485Controller {
 private:
     Stream& _busStream;
     DcsBiosRs485BusParser _bus;
-    DirectOutputPin _busTxPin;
+    OutputPin& _busTxPin;
     uint8_t _busBufferSize;
     uint8_t _busBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];
     bool _busWaitingResponse;
@@ -55,6 +55,8 @@ private:
 
 public:
     DcsBiosRs485Controller(Stream& busStream, int txPin, Stream& pcStream);
+    DcsBiosRs485Controller(Stream& busStream, OutputPin& txPin, Stream& pcStream);
+
     void process();
 };
 

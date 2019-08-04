@@ -22,26 +22,26 @@
 #include <stdint.h>
 #include "OutputPin.h"
 
-// Helper class to do highspeed digital input/output on the arduino.
-// Built in routines are incredibly slow due to significant saftey 
+// Helper class to do high-speed digital input/output on the Arduino.
+// Built in routines are incredibly slow due to significant safety
 // checks and runtime lookup of port and masks.  This class sacrifices
 // some memory in order to do look ups once on port and mask values, and only
 // does pin setup in begin call.
 class DirectOutputPin : public OutputPin
 {
-private:		
-	uint8_t _bitMask;					// Bit mask of pin in register
+private:
+    static   uint8_t _dummyRegister;    // Dummy register to manipulate if pin number is bad
+	const    uint8_t _bitMask;			// Bit mask of pin in register
 	volatile uint8_t *_outputRegister;	// Write register for pin
-	void turnOffPWM(uint8_t timer);
+
+	static void turnOffPWM(uint8_t timer);
 
 public:
-	DirectOutputPin();
-	DirectOutputPin(uint8_t pin);
+	explicit DirectOutputPin(uint8_t pin);
 
-	void setPin(uint8_t pin);
-
-	virtual void clear();	
-	virtual void set();
+    bool isValid() override;
+	void clear() override;
+	void set() override;
 };
 
 #endif

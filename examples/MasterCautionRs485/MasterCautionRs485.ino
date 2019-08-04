@@ -1,9 +1,9 @@
 #include <DcsBios.h>
 
-// UART Serial that is connected to RS-485 transeiver
+// UART Serial that is connected to RS-485 transceiver
 #define BUS_SERIAL Serial
 
-// Pin connected to RS-485 transeiver transmit / receive pins.
+// Pin connected to RS-485 transceiver transmit / receive pins.
 #define BUS_TX_PIN 8
 
 // Address this device will use to report in it's messages
@@ -22,8 +22,8 @@ Switch2Pos masterCautionButton("UFC_MASTER_CAUTION", 10);
 /* Make the LED connected to pin 13 into a Master Caution Light */
 Led masterCautionLed(0x1012, 0x0800, 11, 13);
 
-/*
- * Your setup routine needs to intialize your communications
+/**
+ * Your setup routine needs to initialize your communications
  * and all of your input devices.
  */
 void setup() {
@@ -43,15 +43,15 @@ void loop() {
   PollingInput::pollInputs();
 }
 
-/*
+/**
  * This method will get called at the end of every data frame.  You
  * can update any outputs here if necessary.  Built in output devices
- * automatcially update, and don't need code here.
+ * automatically update, and don't need code here.
  */
 void onDcsBiosFrameSync() {
 }
 
-/*
+/**
  * You need to define 
  * void sendDcsBiosMessage(const char* msg, const char* arg)
  * so that the string msg, followed by a space, the string arg

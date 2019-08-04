@@ -36,6 +36,7 @@ private:
     unsigned int _count;
     unsigned int _data;
     unsigned char _sync_byte_count;
+
 public:
     void processByte(uint8_t c);
     ExportStreamParser();

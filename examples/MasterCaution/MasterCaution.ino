@@ -10,7 +10,7 @@ Switch2Pos masterCautionButton("UFC_MASTER_CAUTION", 10);
 Led masterCautionLed(0x1012, 0x0800, 11, 13);
 
 /*
- * Your setup routine needs to intialize your communications
+ * Your setup routine needs to initialize your communications
  * and all of your input devices.
  */
 void setup() {

@@ -56,7 +56,7 @@ public:
             // No need to compare existing buffer with current value.  We never get to this
             // point unless the sim has sent a change.
             _dirty = true;
-        }    
+        }
     }
 
     char* getString() {

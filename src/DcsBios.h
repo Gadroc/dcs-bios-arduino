@@ -27,7 +27,7 @@
 #include "hal/DirectOutputPin.h"
 #include "hal/DirectAnalogInput.h"
 #include "hal/DirectAnalogOutput.h"
-#include "hal/DirectStepperDriver.h"
+#include "hal/PulseStepperDriver.h"
 #include "hal/AcceleratedStepperOutput.h"
 
 #include "controls/ActionButton.h"

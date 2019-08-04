@@ -22,16 +22,8 @@
 #define sbi(sfr, bit) (_SFR_BYTE(sfr) |= _BV(bit))
 #endif
 
-DirectAnalogInput::DirectAnalogInput() {}    
-
-DirectAnalogInput::DirectAnalogInput(uint8_t pin, uint8_t analog_reference) {
-    setPin(pin);
-}
-
-void DirectAnalogInput::setPin(uint8_t pin, uint8_t analog_reference) 
+DirectAnalogInput::DirectAnalogInput(uint8_t pin, uint8_t analog_reference) : _reference(analog_reference)
 {
-    _reference = analog_reference;
-
 #if defined(analogPinToChannel)
 #if defined(__AVR_ATmega32U4__)
     if (pin >= 18) pin -= 18; // allow for channel or pin numbers

@@ -24,23 +24,18 @@
 
 class DirectInputPin : public InputPin
 {
-private:		
-	uint8_t _bitMask;					// Bit mask of pin in register
+private:
+    static   uint8_t _dummyRegister;    // Dummy register to read from if bad pin config
+	const    uint8_t _bitMask;			// Bit mask of pin in register
 	volatile uint8_t *_inputRegister;   // Read register for pin
 
-	void turnOffPWM(uint8_t timer);
+	static void turnOffPWM(uint8_t timer);
 
 public:
-	DirectInputPin();
-	DirectInputPin(uint8_t pin, uint8_t debounceTime = 10);
-	void setPin(uint8_t pin, uint8_t debounceTime = 10);
+	explicit DirectInputPin(uint8_t pin, uint8_t debounceTime = 10);
 
-	virtual uint8_t readState();
+	bool    isValid() override;
+	uint8_t readState() override;
 };
-
-inline uint8_t DirectInputPin::readState()
-{
-	return (*_inputRegister & _bitMask) ? HIGH : LOW;
-}
 
 #endif

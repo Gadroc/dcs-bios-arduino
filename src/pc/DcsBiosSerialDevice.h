@@ -28,10 +28,10 @@ private:
     Stream& _serial;
 
 public:
-    DcsBiosSerialDevice(Stream& serial);
+    explicit DcsBiosSerialDevice(Stream& serial);
 
-    virtual void sendDcsBiosMessage(const char msg[], const char arg[]);
-    virtual void process();
+    void sendDcsBiosMessage(const char msg[], const char arg[]) override;
+    void process() override;
 };
 
 #endif

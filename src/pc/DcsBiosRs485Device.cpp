@@ -21,10 +21,14 @@
 uint8_t DcsBiosRs485Device::pollingResponseBuffer[DCSBIOS_RS485_MAX_PACKET_DATA_SIZE];
 uint8_t DcsBiosRs485Device::pollingResponseBufferSize;
 
-DcsBiosRs485Device::DcsBiosRs485Device(Stream& busStream, int txPin, uint8_t address) : _busStream(busStream) {
-    _busTxPin.setPin(txPin);
+DcsBiosRs485Device::DcsBiosRs485Device(Stream& busStream, int txPin, uint8_t address) :
+    DcsBiosRs485Device(busStream, *(new DirectOutputPin(txPin)), address)
+{ }
+
+DcsBiosRs485Device::DcsBiosRs485Device(Stream &busStream, OutputPin &txPin, uint8_t address) :
+    _busStream(busStream), _busTxPin(txPin), _address(address)
+{
     _busTxPin.clear();
-    _address = address;
 }
 
 void DcsBiosRs485Device::process() {

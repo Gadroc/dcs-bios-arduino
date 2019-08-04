@@ -24,14 +24,15 @@
 
 class IntegerListener : ExportStreamListener {
 private:
-    unsigned int _address;
-    unsigned int _mask;
-    uint8_t _shift;
+    const unsigned int _address;
+    const unsigned int _mask;
+    const uint8_t _shift;
+
     unsigned int _data;
 
 public:
     IntegerListener(unsigned int address, unsigned int mask, uint8_t shift);
-    virtual void onDcsBiosWrite(unsigned int address, unsigned int value);
+    void onDcsBiosWrite(unsigned int address, unsigned int value) override;
     unsigned int getData();
 };
 

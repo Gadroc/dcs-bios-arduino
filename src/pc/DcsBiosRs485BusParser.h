@@ -50,8 +50,6 @@ class DcsBiosRs485BusParser {
         uint8_t _packetDataByte;
         unsigned long _packetTimeout;
 
-        void resetBus();
-
     public:
         DcsBiosRs485BusParser();
         

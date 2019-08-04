@@ -22,10 +22,39 @@
 #define cbi(sfr, bit) (_SFR_BYTE(sfr) &= ~_BV(bit))
 #endif
 
-DirectInputPin::DirectInputPin() {}
+uint8_t DirectInputPin::_dummyRegister = 0;
 
-DirectInputPin::DirectInputPin(uint8_t pin, uint8_t debounceTime) {
-	setPin(pin, debounceTime);
+DirectInputPin::DirectInputPin(uint8_t pin, uint8_t debounceTime) :  _bitMask(digitalPinToBitMask(pin))
+{
+    uint8_t port = digitalPinToPort(pin);
+
+    if (port == NOT_A_PIN) {
+        _inputRegister = &DirectInputPin::_dummyRegister;
+        return;
+    }
+
+    volatile uint8_t *modeRegister = portModeRegister(port);
+    volatile uint8_t *outputRegister = portOutputRegister(port);
+
+    _inputRegister = portInputRegister(port);
+
+    uint8_t oldSREG = SREG;
+    cli();
+    *modeRegister &= ~_bitMask;
+    *outputRegister |= _bitMask;
+    SREG = oldSREG;
+
+    uint8_t timer = digitalPinToTimer(pin);
+    if (timer != NOT_ON_TIMER) turnOffPWM(timer);
+}
+
+bool DirectInputPin::isValid() {
+    return (_inputRegister != &DirectInputPin::_dummyRegister);
+}
+
+uint8_t DirectInputPin::readState()
+{
+    return (*_inputRegister & _bitMask) ? HIGH : LOW;
 }
 
 void DirectInputPin::turnOffPWM(uint8_t timer)
@@ -86,26 +115,4 @@ void DirectInputPin::turnOffPWM(uint8_t timer)
 		case  TIMER5C:  cbi(TCCR5A, COM5C1);    break;
 		#endif
 	}
-}
-
-void DirectInputPin::setPin(uint8_t pin, uint8_t debounceTime) 
-{
-	uint8_t port = digitalPinToPort(pin);
-
-	if (port == NOT_A_PIN) return;
-
-	volatile uint8_t *modeRegister = portModeRegister(port);
-	volatile uint8_t *outputRegister = portOutputRegister(port);
-
-	_inputRegister = portInputRegister(port);
-	_bitMask = digitalPinToBitMask(pin);
-
-	uint8_t oldSREG = SREG;
-  	cli();
-	*modeRegister &= ~_bitMask;
-	*outputRegister |= _bitMask;
-	SREG = oldSREG;
-
-	uint8_t timer = digitalPinToTimer(pin);
-	if (timer != NOT_ON_TIMER) turnOffPWM(timer);
 }

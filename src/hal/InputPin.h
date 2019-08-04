@@ -24,6 +24,7 @@
 // Interface for all input pins.
 class InputPin {
 public:
+    virtual bool isValid() = 0;
     virtual uint8_t readState() = 0;
 };
 

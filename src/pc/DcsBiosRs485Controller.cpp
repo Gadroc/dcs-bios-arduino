@@ -18,14 +18,20 @@
 */
 #include "DcsBiosRs485Controller.h"
 
-DcsBiosRs485Controller::DcsBiosRs485Controller(Stream& busStream, int txPin, Stream& pcStream) : _busStream(busStream), _pcStream(pcStream) {
-    _busTxPin.setPin(txPin);
+DcsBiosRs485Controller::DcsBiosRs485Controller(Stream& busStream, int txPin, Stream& pcStream) :
+        DcsBiosRs485Controller(busStream, *(new DirectOutputPin(txPin)), pcStream)
+{ }
+
+DcsBiosRs485Controller::DcsBiosRs485Controller(Stream &busStream, OutputPin &txPin, Stream &pcStream) :
+        _busStream(busStream), _busTxPin(txPin), _pcStream(pcStream)
+{
     _busTxPin.clear();
     _busBufferSize = 0;
 
     _busWaitingResponse = false;
     _busPollingAddress = 0;
 }
+
 
 void DcsBiosRs485Controller::process() {
     processPcInput();
@@ -37,8 +43,6 @@ void DcsBiosRs485Controller::process() {
 }
 
 void DcsBiosRs485Controller::sendPollingPacket() {
-    uint8_t address = _busPollingAddress;    
-
     // Make sure device has enough time to turn off transmit.
     delayMicroseconds(10);
 
