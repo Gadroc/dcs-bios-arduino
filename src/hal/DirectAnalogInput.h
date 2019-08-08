@@ -22,8 +22,8 @@
 #include <Arduino.h>
 #include "AnalogInput.h"
 
-// Helper class to do highspeed analog input on the arduino.
-// Built in routines are slow due to significant saftey 
+// Helper class to do high speed analog input on the arduino.
+// Built in routines are slow due to significant safety
 // checks and runtime lookup of port and masks.  This class sacrifices
 // some memory in order to do look ups once on port and mask values, and only
 // does pin setup in begin call.

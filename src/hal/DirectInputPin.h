@@ -25,14 +25,20 @@
 class DirectInputPin : public InputPin
 {
 private:
-    static   uint8_t _dummyRegister;    // Dummy register to read from if bad pin config
+    static   uint8_t _dummyRegister;                   // Dummy register to read from if bad pin config
+    static constexpr unsigned long _readInterval = 5;  // Interval between reads of pin
+
 	const    uint8_t _bitMask;			// Bit mask of pin in register
 	volatile uint8_t *_inputRegister;   // Read register for pin
+
+	unsigned long _lastRead;       // Last read time in millis
+	unsigned int  _readBuffer;     // Buffer of bit reads for the pin
+	bool          _state;          // Last known state
 
 	static void turnOffPWM(uint8_t timer);
 
 public:
-	explicit DirectInputPin(uint8_t pin, uint8_t debounceTime = 10);
+	explicit DirectInputPin(uint8_t pin);
 
 	bool    isValid() override;
 	uint8_t readState() override;

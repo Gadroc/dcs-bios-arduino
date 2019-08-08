@@ -32,7 +32,7 @@ private:
 public:
     Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput& stepperOutput);
 
-    virtual void onDcsBiosFrameSync();
+    void onDcsBiosFrameSync() override;
 };
 
 #endif

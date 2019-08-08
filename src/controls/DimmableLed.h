@@ -31,7 +31,7 @@ public:
     DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
     DimmableLed(unsigned int address, unsigned int mask, uint8_t shift, AnalogOutput& output);
 
-    virtual void onDcsBiosFrameSync();    
+    void onDcsBiosFrameSync() override;
 };
 
 #endif

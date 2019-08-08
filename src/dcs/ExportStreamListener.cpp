@@ -19,7 +19,7 @@
 #include <Arduino.h>
 #include "ExportStreamListener.h"
 
-ExportStreamListener* ExportStreamListener::firstExportStreamListener = NULL;
+ExportStreamListener* ExportStreamListener::firstExportStreamListener = nullptr;
 
 ExportStreamListener::ExportStreamListener() {
     this->nextExportStreamListener = firstExportStreamListener;

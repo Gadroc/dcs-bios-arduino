@@ -27,9 +27,9 @@ private:
     InputPin& _inputPin;
 
 public:
-    Switch2Pos(const char message[], uint8_t pin, int debounceTime = 10);
+    Switch2Pos(const char message[], uint8_t pin);
     Switch2Pos(const char message[], InputPin& inputPin);
-    virtual uint8_t readState();
+    uint8_t readState() override;
 };
 
 #endif

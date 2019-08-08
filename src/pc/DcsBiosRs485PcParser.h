@@ -93,7 +93,7 @@ inline uint8_t DcsBiosRs485PcParser::getCurrentBufferSize() {
 
 inline uint8_t* DcsBiosRs485PcParser::getCurrentBuffer() {
     if (_pcBuffersReady == 0) {
-        return 0;
+        return nullptr;
     }
 
     return _pcBuffers[_pcBufferHead];

@@ -22,7 +22,7 @@
 Stepper::Stepper(unsigned int address, unsigned int mask, uint8_t shift, long minPosition, long maxPosition, StepperOutput& stepperOutput) : IntegerListener(address, mask, shift), _output(stepperOutput) {
     _minPosition = minPosition;
     _maxPosition = maxPosition;
-    _maxValue = 65535>>shift;
+    _maxValue = 65535u>>shift;
 }
 
 void Stepper::onDcsBiosFrameSync() {

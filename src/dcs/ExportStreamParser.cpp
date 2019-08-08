@@ -39,7 +39,7 @@ void ExportStreamParser::processByte(uint8_t c) {
         break;
 
     case DCSBIOS_STATE_ADDRESS_HIGH:
-        _address = (c << 8) | _address;
+        _address = (c << 8u) | _address;
             if (_address != 0x5555) {
             _state = DCSBIOS_STATE_COUNT_LOW;
         } else {
@@ -53,7 +53,7 @@ void ExportStreamParser::processByte(uint8_t c) {
         break;
 
     case DCSBIOS_STATE_COUNT_HIGH:
-        _count = (c << 8) | _count;
+        _count = (c << 8u) | _count;
         _state = DCSBIOS_STATE_DATA_LOW;
         break;
 
@@ -64,13 +64,13 @@ void ExportStreamParser::processByte(uint8_t c) {
         break;
 
     case DCSBIOS_STATE_DATA_HIGH:
-        _data = (c << 8) | _data;
+        _data = (c << 8u) | _data;
         _count--;
         ExportStreamListener::handleDcsBiosWrite(_address, _data);
         if (_count == 0) {
             _state = DCSBIOS_STATE_ADDRESS_LOW;
 
-            // Frame sync moved to end of frame.  All time consumeing updates should
+            // Frame sync moved to end of frame.  All time consuming updates should
             // be handled in framesync during the down time between frame transmissions.
             if (_address == 0xfffe) {
                 ExportStreamListener::handleDcsBiosFrameSync();

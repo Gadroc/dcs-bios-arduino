@@ -19,7 +19,7 @@
 #include "Switch3Pos.h"
 #include "hal/DirectInputPin.h"
 
-Switch3Pos::Switch3Pos(const char message[], uint8_t pinA, uint8_t pinB, int debounceTime) : PollingSwitch(message), _inputPinA(*(new DirectInputPin(pinA, debounceTime))), _inputPinB(*(new DirectInputPin(pinB, debounceTime))) {
+Switch3Pos::Switch3Pos(const char message[], uint8_t pinA, uint8_t pinB) : PollingSwitch(message), _inputPinA(*(new DirectInputPin(pinA))), _inputPinB(*(new DirectInputPin(pinB))) {
 }
 
 Switch3Pos::Switch3Pos(const char message[], InputPin& inputPinA, InputPin& inputPinB) : PollingSwitch(message), _inputPinA(inputPinA), _inputPinB(inputPinB) {

@@ -34,8 +34,8 @@ public:
     Potentiometer(const char message[], uint8_t pin, unsigned int threshold = 50, unsigned int pollingInterval = 100);
     Potentiometer(const char message[], AnalogInput& input, unsigned int threshold = 50, unsigned int pollingInterval = 100);
 
-    virtual void initInput();
-    virtual void pollInput();
+    void initInput() override;
+    void pollInput() override;
 };
 
 #endif

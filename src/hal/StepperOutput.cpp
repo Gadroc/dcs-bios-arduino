@@ -19,7 +19,7 @@
 #include <Arduino.h>
 #include "StepperOutput.h"
 
-StepperOutput* StepperOutput::firstStepperOutput = NULL;
+StepperOutput* StepperOutput::firstStepperOutput = nullptr;
 
 StepperOutput::StepperOutput() {
     this->nextStepperOutput = firstStepperOutput;

@@ -23,14 +23,14 @@
 
 class PollingSwitch : public PollingInput {
 private:    
-    virtual void initInput();
-    virtual void pollInput();
+    void initInput() override;
+    void pollInput() override;
 
 protected:
     uint8_t _lastState;
 
 public:
-    PollingSwitch(const char message[]);
+    explicit PollingSwitch(const char message[]);
     virtual uint8_t readState() = 0;
 };
 

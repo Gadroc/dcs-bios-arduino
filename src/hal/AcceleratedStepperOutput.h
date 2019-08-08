@@ -81,7 +81,7 @@ private:
     // Step delay for last step
     unsigned int _lastStepDelay;
 
-    // Remember the last acceleration step dealy before full speed
+    // Remember the last acceleration step `delay` before full speed
     unsigned int _lastAccelStepDelay;
 
     // Remainder from step delay to increase accuracy
@@ -101,23 +101,23 @@ private:
 
 public:
     // driver - Stepper driver used to control this stepper motor.
-    // stepsPerRevolution - Native steps per revolution for the stepper motor (1.8 degeree stepper is 200)
+    // stepsPerRevolution - Native steps per revolution for the stepper motor (1.8 degree stepper is 200)
     // microsteps - How many microsteps does the driver apply for this motor (1 = no microstepping)
     // maxSpeed - Maximum rotation speed for this motor in 0.01*rad/sec (6.28 radian/sec would be 628)
-    // acceleration - Acceleration/Deceleration rate for this motor in 0.01*rad/sec^2 (8 radion/sec^s would be 800) (65535 disables acceleration which is the default)
-    // frequency - Step counter frequency.  Default is appropraite for poll based timing like the run function on this class.  Set appropriately if calling step function from a timer interrupt.
+    // acceleration - Acceleration/Deceleration rate for this motor in 0.01*rad/sec^2 (8 radian/sec^s would be 800) (65535 disables acceleration which is the default)
+    // frequency - Step counter frequency.  Default is appropriate for poll based timing like the run function on this class.  Set appropriately if calling step function from a timer interrupt.
     AcceleratedStepperOutput(StepperDriver& driver, unsigned int stepsPerRevolution, unsigned int microsteps, unsigned int maxSpeed, unsigned int acceleration = 65535, unsigned long frequency = 1000000L);
 
     // Checks time and steps the motor if necessary.  Must be called as frequent as possible
-    virtual void run();
+    void run() override;
 
     // Sets a new target step position
-    virtual void setTargetPosition(long newPosition);
+    void setTargetPosition(long newPosition) override;
 
     // Sets the current step position of the motor
-    virtual void setCurrentPosition(long currentPosition);  
+    void setCurrentPosition(long currentPosition) override;
 
-    virtual long getCurrentPosition() {
+    long getCurrentPosition() override {
         return _currentPosition;
     }
 };

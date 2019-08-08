@@ -21,22 +21,22 @@
 
 #include <Arduino.h>
 
-#define DCSBIOS_RS485_PACKET_START_BYTE 0xbb
-#define DCSBIOS_RS485_PACKET_LEADIN_BYTE 0x88
+#define DCSBIOS_RS485_PACKET_START_BYTE 0xbbu
+#define DCSBIOS_RS485_PACKET_LEADIN_BYTE 0x88u
 
-#define DCSBIOS_RS485_MAX_DEVICE_ADDRESS 31
-#define DCSBIOS_RS485_MAX_PACKET_DATA_SIZE 64
+#define DCSBIOS_RS485_MAX_DEVICE_ADDRESS 31u
+#define DCSBIOS_RS485_MAX_PACKET_DATA_SIZE 64u
 
-#define DCSBIOS_RS485_PACKETYPE_POLLING_REQUEST 0
-#define DCSBIOS_RS485_PACKETYPE_POLLING_RESPONSE 1
+#define DCSBIOS_RS485_PACKETYPE_POLLING_REQUEST 0u
+#define DCSBIOS_RS485_PACKETYPE_POLLING_RESPONSE 1u
 
-#define PACKET_START 0    // Waiting for Packet Start
-#define PACKET_LEADIN 1   // Waiting for Packet Lead In
-#define PACKET_ADDRTYPE 2 // Waiting for Packet Address/Type
-#define PACKET_SIZE 3     // Waiting for Packet Size
-#define PACKET_DATA 4     // Waiting for Packet Data
-#define PACKET_COMPLETE 5 // Packet is complete
-#define PACKET_TIMEOUT 6  // Packet has timedout
+#define PACKET_START 0u    // Waiting for Packet Start
+#define PACKET_LEADIN 1u   // Waiting for Packet Lead In
+#define PACKET_ADDRTYPE 2u // Waiting for Packet Address/Type
+#define PACKET_SIZE 3u     // Waiting for Packet Size
+#define PACKET_DATA 4u     // Waiting for Packet Data
+#define PACKET_COMPLETE 5u // Packet is complete
+#define PACKET_TIMEOUT 6u  // Packet has timed out
 
 #define PACKET_TIMEOUT_DURATION 2000
 
@@ -60,7 +60,7 @@ class DcsBiosRs485BusParser {
         bool hasPacketDataByte();
         uint8_t getPacketDataByte();
 
-        void sendPacket(Stream& stream, uint8_t packetType, uint8_t address, uint8_t* data = 0, uint8_t size = 0, uint8_t offset = 0);
+        void sendPacket(Stream& stream, uint8_t packetType, uint8_t address, uint8_t* data = nullptr, uint8_t size = 0, uint8_t offset = 0);
 
         void processByte(int in);
 };
@@ -82,7 +82,7 @@ inline uint8_t DcsBiosRs485BusParser::getPacketAddress() {
 }
 
 inline uint8_t DcsBiosRs485BusParser::getPacketType() {
-    return _packetAddressType >> 5;
+    return _packetAddressType >> 5u;
 }
 
 inline uint8_t DcsBiosRs485BusParser::getPacketDataSize() {

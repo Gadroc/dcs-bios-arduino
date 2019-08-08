@@ -19,10 +19,10 @@
 #include "SwitchMultiPos.h"
 #include "hal/DirectInputPin.h"
 
-SwitchMultiPos::SwitchMultiPos(const char message[], const uint8_t pins[], uint8_t numberOfPins, int debounceTime) : PollingSwitch(message) {
+SwitchMultiPos::SwitchMultiPos(const char message[], const uint8_t pins[], uint8_t numberOfPins) : PollingSwitch(message) {
     _inputPins = new InputPin*[numberOfPins];
     for(uint8_t i=0; i<numberOfPins; i++) {
-        _inputPins[i] = new DirectInputPin(pins[i], debounceTime);
+        _inputPins[i] = new DirectInputPin(pins[i]);
     }
     _numberOfPins = numberOfPins;
 }

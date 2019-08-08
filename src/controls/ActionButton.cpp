@@ -19,12 +19,12 @@
 #include "ActionButton.h"
 #include "hal/DirectInputPin.h"
 
-ActionButton::ActionButton(const char message[], const char arg[], uint8_t pin, int debounceTime) : PollingInput(message), _pin(*(new DirectInputPin(pin, debounceTime))) {
-    _arg = arg;
-}
+ActionButton::ActionButton(const char message[], const char arg[], uint8_t pin) : ActionButton(message, arg, *(new DirectInputPin(pin)))
+{ }
 
 ActionButton::ActionButton(const char message[], const char arg[], InputPin& pin) : PollingInput(message), _pin(pin) {
     _arg = arg;
+    _lastState = false;
 }
 
 void ActionButton::initInput() {

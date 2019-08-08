@@ -19,10 +19,9 @@
 #include "Potentiometer.h"
 #include "hal/DirectAnalogInput.h"
 
-Potentiometer::Potentiometer(const char message[], uint8_t pin, unsigned int threshold, unsigned int pollingInterval) : PollingInput(message), _input(*(new DirectAnalogInput(pin))) {
-    _threshold = threshold;
-    _pollingInterval = pollingInterval;
-}
+Potentiometer::Potentiometer(const char message[], uint8_t pin, unsigned int threshold, unsigned int pollingInterval)
+    : Potentiometer(message, *(new DirectAnalogInput(pin)), threshold, pollingInterval)
+{}
 
 Potentiometer::Potentiometer(const char message[], AnalogInput& input, unsigned int threshold, unsigned int pollingInterval) : PollingInput(message), _input(input) {
     _threshold = threshold;

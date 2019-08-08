@@ -32,7 +32,7 @@ public:
 	Led(unsigned int address, unsigned int mask, uint8_t shift, uint8_t pin);
     Led(unsigned int address, unsigned int mask, uint8_t shift, OutputPin& pin);
 
-    virtual void onDcsBiosFrameSync();    
+    void onDcsBiosFrameSync() override;
 };
 
 #endif

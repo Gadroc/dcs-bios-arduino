@@ -64,7 +64,7 @@ void AcceleratedStepperOutput::planMove(long distance) {
             _driver.setDirection(_currentDirection);
 
             if (distance == 1) {
-                // When distance is only step construct the scenario appropiatley
+                // When distance is only step construct the scenario appropriately
                 // so that only one step happens and then stop.
                 _accelerationStepCount = 1;
                 _runState = DECEL;
@@ -74,11 +74,11 @@ void AcceleratedStepperOutput::planMove(long distance) {
                 _accelerationStepCount = 0;
                 _stepDelayRemainder = 0;
                 if (_initialStepDelay <= _minStepDelay) {
-                    // if intial speed is faster than max speed go straight to max speed
+                    // if initial speed is faster than max speed go straight to max speed
                     _lastStepDelay = _minStepDelay;
                     _runState = RUN;
                 } else {
-                    // Seed last step delay with pre-caclulated initial step speed and turn on acceleration
+                    // Seed last step delay with pre-calculated initial step speed and turn on acceleration
                     _lastStepDelay = _initialStepDelay;
                     _runState = ACCEL;
                 }
@@ -94,7 +94,7 @@ void AcceleratedStepperOutput::planMove(long distance) {
                 if (absDistance > _accelerationStepCount) {
                     _runState = ACCEL;
                 }
-                // If the distance is not greater decelerate to an overshoot and step funciton will plan correction
+                // If the distance is not greater decelerate to an overshoot and step function will plan correction
                 // move when deceleration is done.
                 break;
 
@@ -133,7 +133,7 @@ void AcceleratedStepperOutput::setCurrentPosition(long currentPosition) {
 }
 
 unsigned int AcceleratedStepperOutput::step() {
-    unsigned int newStepDelay;
+    unsigned int newStepDelay = 0;
 
     _driver.step();
     _currentPosition += _currentDirection;

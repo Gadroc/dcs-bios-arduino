@@ -88,8 +88,8 @@ void DcsBiosRs485BusParser::processByte(int in) {
 void DcsBiosRs485BusParser::sendPacket(Stream& stream, uint8_t packetType, uint8_t address, uint8_t* data, uint8_t size, uint8_t offset) {
     stream.write(DCSBIOS_RS485_PACKET_START_BYTE);
     stream.write(DCSBIOS_RS485_PACKET_LEADIN_BYTE);
-    stream.write((address & 31) | (packetType << 5));
-    if (data == 0 || size == 0) {
+    stream.write((address & 31u) | (packetType << 5u));
+    if (data == nullptr || size == 0) {
         stream.write((uint8_t)0);
     } else {
         stream.write(size);

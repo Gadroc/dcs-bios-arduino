@@ -19,7 +19,7 @@
 #include "Switch2Pos.h"
 #include "hal/DirectInputPin.h"
 
-Switch2Pos::Switch2Pos(const char message[], uint8_t pin, int debounceTime) : PollingSwitch(message), _inputPin(*(new DirectInputPin(pin, debounceTime))) {
+Switch2Pos::Switch2Pos(const char message[], uint8_t pin) : PollingSwitch(message), _inputPin(*(new DirectInputPin(pin))) {
 }
 
 Switch2Pos::Switch2Pos(const char message[], InputPin& inputPin) : PollingSwitch(message), _inputPin(inputPin) {

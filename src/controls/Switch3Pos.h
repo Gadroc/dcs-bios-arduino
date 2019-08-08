@@ -28,9 +28,9 @@ private:
     InputPin& _inputPinB;
     
 public:
-    Switch3Pos(const char message[], uint8_t pinA, uint8_t pinB, int debounceTime = 10);
+    Switch3Pos(const char message[], uint8_t pinA, uint8_t pinB);
     Switch3Pos(const char message[], InputPin& inputPinA, InputPin& inputPinB);
-    virtual uint8_t readState();
+    uint8_t readState() override;
 };
 
 #endif

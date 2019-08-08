@@ -24,8 +24,12 @@
 
 uint8_t DirectInputPin::_dummyRegister = 0;
 
-DirectInputPin::DirectInputPin(uint8_t pin, uint8_t debounceTime) :  _bitMask(digitalPinToBitMask(pin))
+DirectInputPin::DirectInputPin(uint8_t pin) :  _bitMask(digitalPinToBitMask(pin))
 {
+    _lastRead = millis();
+    _readBuffer = 0;
+    _state = HIGH;
+
     uint8_t port = digitalPinToPort(pin);
 
     if (port == NOT_A_PIN) {
@@ -48,13 +52,19 @@ DirectInputPin::DirectInputPin(uint8_t pin, uint8_t debounceTime) :  _bitMask(di
     if (timer != NOT_ON_TIMER) turnOffPWM(timer);
 }
 
-bool DirectInputPin::isValid() {
+bool DirectInputPin::isValid()
+{
     return (_inputRegister != &DirectInputPin::_dummyRegister);
 }
 
 uint8_t DirectInputPin::readState()
 {
-    return (*_inputRegister & _bitMask) ? HIGH : LOW;
+    if (millis() - _lastRead >= _readInterval) {
+        _readBuffer = (_readBuffer << 1u) | ((*_inputRegister & _bitMask) ? 1u : 0u) | 0xe000u;
+        if      (_readBuffer == 0xf000u) { _state = LOW; }
+        else if (_readBuffer == 0xffffu) { _state = HIGH; }
+    }
+    return _state;
 }
 
 void DirectInputPin::turnOffPWM(uint8_t timer)
